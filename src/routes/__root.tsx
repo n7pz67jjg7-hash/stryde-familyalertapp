@@ -85,10 +85,14 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "apple-mobile-web-app-status-bar-style", content: "black-translucent" },
       { name: "apple-mobile-web-app-title", content: "STRYDE" },
       { property: "og:title", content: "STRYDE - Emergency Safety" },
-      { property: "og:description", content: "AI-powered emergency detection and family safety platform" },
+      { property: "og:description", content: "AI-powered emergency detection and family safety platform for elderly, patients, and individuals at risk of falls or sudden medical emergencies." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
       { name: "twitter:site", content: "@stryde" },
+      { name: "twitter:title", content: "STRYDE - Emergency Safety" },
+      { name: "twitter:description", content: "AI-powered emergency detection and family safety platform for elderly, patients, and individuals at risk of falls or sudden medical emergencies." },
+      { property: "og:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/cec467af-bba9-463c-b396-d9883160c54a" },
+      { name: "twitter:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/cec467af-bba9-463c-b396-d9883160c54a" },
     ],
     links: [
       {
