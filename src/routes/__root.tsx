@@ -80,7 +80,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { title: "STRYDE - Emergency Safety" },
       { name: "description", content: "AI-powered emergency detection and family safety platform for elderly, patients, and individuals at risk of falls or sudden medical emergencies." },
       { name: "author", content: "STRYDE" },
-      { name: "theme-color", content: "#F97316" },
+      { name: "theme-color", content: "#2563eb" },
       { name: "apple-mobile-web-app-capable", content: "yes" },
       { name: "apple-mobile-web-app-status-bar-style", content: "black-translucent" },
       { name: "apple-mobile-web-app-title", content: "STRYDE" },
