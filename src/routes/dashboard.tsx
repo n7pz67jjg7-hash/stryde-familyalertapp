@@ -117,7 +117,7 @@ function Dashboard() {
                 {risk}<span className="text-base text-muted-foreground">/100</span>
               </div>
             </div>
-            <span className={`rounded-full px-2.5 py-1 text-xs font-semibold bg-${riskLevel.tone}/15 text-${riskLevel.tone}`}>
+            <span className={`rounded-full px-2.5 py-1 text-xs font-semibold ${riskLevel.tone === "destructive" ? "bg-destructive/15 text-destructive" : riskLevel.tone === "warning" ? "bg-warning/20 text-warning-foreground" : "bg-success/15 text-success"}`}>
               {riskLevel.label}
             </span>
           </div>

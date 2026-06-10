@@ -56,10 +56,10 @@ function HistoryPage() {
           <ul className="mt-5 flex flex-col gap-3">
             {events.map((e) => {
               const Icon = e.type === "fall" ? AlertCircle : e.type === "location" ? MapPin : Bell;
-              const tone = e.type === "fall" ? "destructive" : e.type === "location" ? "primary" : "success";
+              const toneCls = e.type === "fall" ? "bg-destructive/15 text-destructive" : e.type === "location" ? "bg-primary/15 text-primary" : "bg-success/15 text-success";
               return (
                 <li key={e.id} className="flex items-start gap-3 rounded-2xl bg-surface p-3 shadow-card animate-fade-in">
-                  <div className={`flex h-10 w-10 items-center justify-center rounded-xl bg-${tone}/15 text-${tone}`}>
+                  <div className={`flex h-10 w-10 items-center justify-center rounded-xl ${toneCls}`}>
                     <Icon className="h-5 w-5" />
                   </div>
                   <div className="flex-1 min-w-0">
