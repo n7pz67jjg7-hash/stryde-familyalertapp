@@ -31,10 +31,11 @@ export function MobileShell({
         <Link
           to="/emergency"
           aria-label="Trigger SOS"
-          className="fixed bottom-24 right-4 z-30 flex h-14 w-14 items-center justify-center rounded-full bg-destructive text-destructive-foreground shadow-elevated transition-transform active:scale-95"
-          style={{ boxShadow: "0 10px 30px -8px oklch(0.64 0.22 25 / 0.6)" }}
+          className="fixed bottom-24 right-4 z-30 flex h-16 w-16 items-center justify-center rounded-full bg-destructive text-destructive-foreground shadow-elevated transition-transform active:scale-95"
+          style={{ boxShadow: "0 14px 40px -10px oklch(0.6 0.22 25 / 0.55)" }}
         >
-          <ShieldAlert className="h-6 w-6" />
+          <div className="pulse-ring absolute inset-0 rounded-full" />
+          <ShieldAlert className="relative h-7 w-7" />
         </Link>
       )}
 
@@ -48,16 +49,12 @@ export function MobileShell({
                   <Link
                     to={to}
                     className={`flex flex-col items-center gap-1 rounded-lg py-1.5 text-xs transition-colors ${
-                      active
-                        ? "text-primary"
-                        : "text-muted-foreground hover:text-foreground"
+                      active ? "text-primary" : "text-muted-foreground hover:text-foreground"
                     }`}
                   >
                     <Icon className="h-5 w-5" strokeWidth={active ? 2.4 : 1.8} />
                     <span className={active ? "font-semibold" : ""}>{label}</span>
-                    {active && (
-                      <span className="h-0.5 w-6 rounded-full bg-primary" />
-                    )}
+                    {active && <span className="h-0.5 w-6 rounded-full bg-primary" />}
                   </Link>
                 </li>
               );
