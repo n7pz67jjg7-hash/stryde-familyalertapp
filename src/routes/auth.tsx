@@ -5,6 +5,26 @@ import { StrydeLogo } from "@/components/StrydeLogo";
 import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable/index";
 
+function Field({
+  icon: Icon, type, placeholder, value, onChange,
+}: {
+  icon: typeof Mail; type: string; placeholder: string; value: string; onChange: (v: string) => void;
+}) {
+  return (
+    <label className="flex h-14 items-center gap-3 rounded-2xl border border-border bg-surface px-4">
+      <Icon className="h-5 w-5 text-muted-foreground" />
+      <input
+        type={type}
+        placeholder={placeholder}
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        className="flex-1 bg-transparent text-sm outline-none placeholder:text-muted-foreground"
+      />
+    </label>
+  );
+}
+
+
 
 export const Route = createFileRoute("/auth")({
   head: () => ({ meta: [{ title: "Sign in — STRYDE" }] }),
