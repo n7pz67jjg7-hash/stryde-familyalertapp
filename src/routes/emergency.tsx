@@ -2,7 +2,8 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { ArrowLeft, AlertCircle, MapPin, Phone } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { useDeviceStatus } from "@/hooks/useDeviceStatus";
-import { loadContacts, type EmergencyContact } from "@/lib/contacts-store";
+import { listContacts, type EmergencyContact } from "@/lib/contacts-store";
+import { useAuth } from "@/hooks/useAuth";
 
 export const Route = createFileRoute("/emergency")({
   head: () => ({ meta: [{ title: "Emergency — STRYDE" }] }),
@@ -14,12 +15,16 @@ const COUNTDOWN_SECONDS = 30;
 function Emergency() {
   const navigate = useNavigate();
   const { geo, requestGeo } = useDeviceStatus();
+  const { user } = useAuth();
   const [seconds, setSeconds] = useState(COUNTDOWN_SECONDS);
   const [sent, setSent] = useState(false);
   const [contacts, setContacts] = useState<EmergencyContact[]>([]);
   const audioRef = useRef<AudioContext | null>(null);
 
-  useEffect(() => { setContacts(loadContacts()); requestGeo(); }, []); // eslint-disable-line
+  useEffect(() => {
+    requestGeo();
+    if (user) listContacts(user.id).then(setContacts).catch(() => {});
+  }, [user]); // eslint-disable-line
 
   // Vibration + warning beep
   useEffect(() => {

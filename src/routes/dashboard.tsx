@@ -4,7 +4,8 @@ import { Bell, ShieldCheck, MapPin, Battery, Activity, Wifi, WifiOff, Cpu, Users
 import { useEffect, useMemo, useState } from "react";
 import { useDeviceStatus } from "@/hooks/useDeviceStatus";
 import { useFallDetection } from "@/hooks/useFallDetection";
-import { loadContacts } from "@/lib/contacts-store";
+import { listContacts } from "@/lib/contacts-store";
+import { useAuth } from "@/hooks/useAuth";
 
 export const Route = createFileRoute("/dashboard")({
   head: () => ({ meta: [{ title: "Dashboard — STRYDE" }] }),
@@ -20,11 +21,15 @@ function batteryColor(level: number | null): string {
 
 function Dashboard() {
   const { battery, online, geo, motion, requestMotion, requestGeo } = useDeviceStatus();
+  const { user, profile } = useAuth();
   const [sensorEnabled, setSensorEnabled] = useState(false);
   const fall = useFallDetection(sensorEnabled && motion.permission !== "denied");
   const [contactsCount, setContactsCount] = useState(0);
 
-  useEffect(() => { setContactsCount(loadContacts().length); }, []);
+  useEffect(() => {
+    if (!user) return;
+    listContacts(user.id).then((c) => setContactsCount(c.length)).catch(() => {});
+  }, [user]);
   useEffect(() => { requestGeo(); /* prompt once */ }, []); // eslint-disable-line
 
   const enableSensors = async () => {
@@ -43,7 +48,7 @@ function Dashboard() {
     <MobileShell>
       <header className="flex items-center justify-between px-5 pt-6 pb-4">
         <div>
-          <p className="text-xs text-muted-foreground">Welcome back</p>
+          <p className="text-xs text-muted-foreground">Welcome back{profile?.full_name ? `, ${profile.full_name.split(" ")[0]}` : ""}</p>
           <h1 className="text-xl font-bold tracking-tight">Dashboard</h1>
         </div>
         <Link to="/notifications" className="relative flex h-10 w-10 items-center justify-center rounded-full bg-surface shadow-card">

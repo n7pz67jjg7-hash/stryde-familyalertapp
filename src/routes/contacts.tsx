@@ -1,8 +1,15 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { MobileShell } from "@/components/MobileShell";
-import { ArrowLeft, Plus, Phone, Star, Trash2, Pencil, X, Check } from "lucide-react";
+import { ArrowLeft, Plus, Phone, Star, Trash2, Pencil, X, Check, Lock } from "lucide-react";
 import { useEffect, useState } from "react";
-import { loadContacts, saveContacts, type EmergencyContact } from "@/lib/contacts-store";
+import {
+  listContacts,
+  createContact,
+  updateContact,
+  deleteContact,
+  type EmergencyContact,
+} from "@/lib/contacts-store";
+import { useAuth, TIER_CONTACT_LIMIT } from "@/hooks/useAuth";
 
 export const Route = createFileRoute("/contacts")({
   head: () => ({ meta: [{ title: "Emergency Contacts — STRYDE" }] }),
@@ -13,27 +20,47 @@ const AVATAR_TONES = ["bg-primary", "bg-accent", "bg-info", "bg-success", "bg-wa
 
 function Contacts() {
   const navigate = useNavigate();
+  const { user, profile, loading: authLoading } = useAuth();
   const [contacts, setContacts] = useState<EmergencyContact[]>([]);
   const [editing, setEditing] = useState<EmergencyContact | null>(null);
   const [showForm, setShowForm] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => { setContacts(loadContacts()); }, []);
+  const tier = profile?.subscription_tier ?? "free";
+  const limit = TIER_CONTACT_LIMIT[tier];
+  const reachedLimit = contacts.length >= limit;
 
-  const persist = (next: EmergencyContact[]) => {
-    setContacts(next);
-    saveContacts(next);
+  useEffect(() => {
+    if (authLoading) return;
+    if (!user) { navigate({ to: "/auth" }); return; }
+    listContacts(user.id)
+      .then(setContacts)
+      .catch((e) => setError(e.message))
+      .finally(() => setLoading(false));
+  }, [user, authLoading, navigate]);
+
+  const refresh = async () => { if (user) setContacts(await listContacts(user.id)); };
+
+  const upsert = async (c: { id?: string; name: string; phone: string; relation?: string; priority: boolean }) => {
+    if (!user) return;
+    try {
+      if (c.id) {
+        await updateContact(c.id, { name: c.name, phone: c.phone, relation: c.relation ?? null, priority: c.priority });
+      } else {
+        if (reachedLimit) { setError(`Your plan allows up to ${limit} contacts.`); return; }
+        await createContact(user.id, c);
+      }
+      await refresh();
+      setShowForm(false);
+      setEditing(null);
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Save failed");
+    }
   };
 
-  const upsert = (c: EmergencyContact) => {
-    const exists = contacts.some((x) => x.id === c.id);
-    persist(exists ? contacts.map((x) => x.id === c.id ? c : x) : [...contacts, c]);
-    setShowForm(false);
-    setEditing(null);
-  };
-
-  const remove = (id: string) => persist(contacts.filter((c) => c.id !== id));
-  const togglePriority = (id: string) =>
-    persist(contacts.map((c) => c.id === id ? { ...c, priority: !c.priority } : c));
+  const remove = async (id: string) => { await deleteContact(id); await refresh(); };
+  const togglePriority = async (c: EmergencyContact) => { await updateContact(c.id, { priority: !c.priority }); await refresh(); };
 
   return (
     <MobileShell>
@@ -42,13 +69,30 @@ function Contacts() {
           <ArrowLeft className="h-5 w-5" />
         </button>
         <h1 className="text-lg font-bold">Emergency Contacts</h1>
-        <button onClick={() => { setEditing(null); setShowForm(true); }} className="flex h-10 w-10 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-glow">
-          <Plus className="h-5 w-5" />
+        <button
+          onClick={() => { if (reachedLimit) return; setEditing(null); setShowForm(true); }}
+          disabled={reachedLimit}
+          className="flex h-10 w-10 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-glow disabled:opacity-50"
+        >
+          {reachedLimit ? <Lock className="h-4 w-4" /> : <Plus className="h-5 w-5" />}
         </button>
       </header>
 
       <div className="px-5">
-        {contacts.length === 0 ? (
+        <div className="mb-3 flex items-center justify-between rounded-xl bg-muted px-3 py-2 text-xs">
+          <span className="font-medium text-muted-foreground">
+            {contacts.length} / {limit === Infinity ? "∞" : limit} contacts · {tier.toUpperCase()}
+          </span>
+          {reachedLimit && tier !== "premium" && (
+            <button onClick={() => navigate({ to: "/plans" })} className="font-semibold text-primary">Upgrade</button>
+          )}
+        </div>
+
+        {error && <p className="mb-3 rounded-xl bg-destructive/10 px-3 py-2 text-xs text-destructive">{error}</p>}
+
+        {loading ? (
+          <div className="rounded-2xl bg-surface p-8 text-center text-sm text-muted-foreground shadow-card">Loading…</div>
+        ) : contacts.length === 0 ? (
           <div className="rounded-2xl bg-surface p-8 text-center shadow-card">
             <p className="text-sm text-muted-foreground">No contacts yet.</p>
             <button onClick={() => setShowForm(true)} className="mt-3 rounded-xl bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground">
@@ -57,7 +101,7 @@ function Contacts() {
           </div>
         ) : (
           <ul className="flex flex-col gap-3">
-            {[...contacts].sort((a, b) => Number(b.priority) - Number(a.priority)).map((c, idx) => (
+            {contacts.map((c, idx) => (
               <li key={c.id} className="flex items-center gap-3 rounded-2xl bg-surface p-3 shadow-card animate-fade-in">
                 <div className={`flex h-12 w-12 items-center justify-center rounded-full text-base font-bold text-primary-foreground ${AVATAR_TONES[idx % AVATAR_TONES.length]}`}>
                   {c.name.charAt(0).toUpperCase()}
@@ -69,7 +113,7 @@ function Contacts() {
                   </div>
                   <div className="text-xs text-muted-foreground truncate">{c.phone}{c.relation ? ` · ${c.relation}` : ""}</div>
                 </div>
-                <button onClick={() => togglePriority(c.id)} aria-label="Toggle priority" className="flex h-9 w-9 items-center justify-center rounded-full bg-muted">
+                <button onClick={() => togglePriority(c)} aria-label="Toggle priority" className="flex h-9 w-9 items-center justify-center rounded-full bg-muted">
                   <Star className={`h-4 w-4 ${c.priority ? "fill-warning text-warning" : "text-muted-foreground"}`} />
                 </button>
                 <button onClick={() => { setEditing(c); setShowForm(true); }} aria-label="Edit" className="flex h-9 w-9 items-center justify-center rounded-full bg-muted">
@@ -89,7 +133,7 @@ function Contacts() {
           initial={editing}
           onCancel={() => { setShowForm(false); setEditing(null); }}
           onSave={upsert}
-          onDelete={editing ? () => { remove(editing.id); setShowForm(false); setEditing(null); } : undefined}
+          onDelete={editing ? async () => { await remove(editing.id); setShowForm(false); setEditing(null); } : undefined}
         />
       )}
     </MobileShell>
@@ -101,7 +145,7 @@ function ContactForm({
 }: {
   initial: EmergencyContact | null;
   onCancel: () => void;
-  onSave: (c: EmergencyContact) => void;
+  onSave: (c: { id?: string; name: string; phone: string; relation?: string; priority: boolean }) => void;
   onDelete?: () => void;
 }) {
   const [name, setName] = useState(initial?.name ?? "");
@@ -112,7 +156,7 @@ function ContactForm({
   const submit = () => {
     if (!name.trim() || !phone.trim()) return;
     onSave({
-      id: initial?.id ?? crypto.randomUUID(),
+      id: initial?.id,
       name: name.trim(),
       phone: phone.trim(),
       relation: relation.trim() || undefined,
@@ -129,13 +173,13 @@ function ContactForm({
         </div>
         <div className="space-y-3">
           <Field label="Name">
-            <input value={name} onChange={(e) => setName(e.target.value)} placeholder="Mom" className="w-full rounded-xl bg-input px-3 py-2.5 text-sm outline-none ring-ring/0 focus:ring-2" />
+            <input value={name} onChange={(e) => setName(e.target.value)} placeholder="Mom" className="w-full rounded-xl bg-input px-3 py-2.5 text-sm outline-none focus:ring-2 focus:ring-ring" />
           </Field>
           <Field label="Phone">
             <input value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="+20 100 000 0000" inputMode="tel" className="w-full rounded-xl bg-input px-3 py-2.5 text-sm outline-none focus:ring-2 focus:ring-ring" />
           </Field>
           <Field label="Relation (optional)">
-            <input value={relation} onChange={(e) => setRelation(e.target.value)} placeholder="Family / Doctor" className="w-full rounded-xl bg-input px-3 py-2.5 text-sm outline-none focus:ring-2 focus:ring-ring" />
+            <input value={relation ?? ""} onChange={(e) => setRelation(e.target.value)} placeholder="Family / Doctor" className="w-full rounded-xl bg-input px-3 py-2.5 text-sm outline-none focus:ring-2 focus:ring-ring" />
           </Field>
           <label className="flex items-center justify-between rounded-xl bg-muted p-3">
             <span className="flex items-center gap-2 text-sm font-medium">
