@@ -45,16 +45,16 @@ function Landing() {
 
         <div className="relative mt-10 flex w-full flex-col gap-3">
           <Link
-            to="/register"
+            to="/auth"
             className="flex h-14 items-center justify-center rounded-2xl bg-gradient-primary font-semibold text-primary-foreground shadow-glow transition-transform active:scale-[0.98]"
           >
             Get Started
           </Link>
           <Link
-            to="/login"
+            to="/auth"
             className="flex h-14 items-center justify-center rounded-2xl border border-border bg-surface font-semibold text-foreground transition-colors active:bg-surface-elevated"
           >
-            Login
+            Log in
           </Link>
         </div>
       </section>

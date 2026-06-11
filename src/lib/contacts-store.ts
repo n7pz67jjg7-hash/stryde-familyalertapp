@@ -1,33 +1,50 @@
+import { supabase } from "@/integrations/supabase/client";
+
 export interface EmergencyContact {
   id: string;
+  user_id: string;
   name: string;
   phone: string;
-  relation?: string;
+  relation: string | null;
   priority: boolean;
 }
 
-const KEY = "stryde.contacts.v1";
-
-export function loadContacts(): EmergencyContact[] {
-  if (typeof window === "undefined") return [];
-  try {
-    const raw = localStorage.getItem(KEY);
-    if (!raw) return seed();
-    return JSON.parse(raw) as EmergencyContact[];
-  } catch {
-    return seed();
-  }
+export async function listContacts(userId: string): Promise<EmergencyContact[]> {
+  const { data, error } = await supabase
+    .from("emergency_contacts")
+    .select("*")
+    .eq("user_id", userId)
+    .order("priority", { ascending: false })
+    .order("created_at", { ascending: true });
+  if (error) throw error;
+  return (data ?? []) as EmergencyContact[];
 }
 
-export function saveContacts(list: EmergencyContact[]) {
-  if (typeof window === "undefined") return;
-  localStorage.setItem(KEY, JSON.stringify(list));
+export async function createContact(
+  userId: string,
+  input: { name: string; phone: string; relation?: string; priority?: boolean },
+) {
+  const { data, error } = await supabase
+    .from("emergency_contacts")
+    .insert({
+      user_id: userId,
+      name: input.name,
+      phone: input.phone,
+      relation: input.relation ?? null,
+      priority: input.priority ?? false,
+    })
+    .select()
+    .single();
+  if (error) throw error;
+  return data as EmergencyContact;
 }
 
-function seed(): EmergencyContact[] {
-  const defaults: EmergencyContact[] = [
-    { id: crypto.randomUUID(), name: "Mom", phone: "+201012345678", relation: "Family", priority: true },
-  ];
-  saveContacts(defaults);
-  return defaults;
+export async function updateContact(id: string, patch: Partial<Omit<EmergencyContact, "id" | "user_id">>) {
+  const { error } = await supabase.from("emergency_contacts").update(patch).eq("id", id);
+  if (error) throw error;
+}
+
+export async function deleteContact(id: string) {
+  const { error } = await supabase.from("emergency_contacts").delete().eq("id", id);
+  if (error) throw error;
 }
