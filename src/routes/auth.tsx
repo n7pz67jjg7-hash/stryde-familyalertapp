@@ -4,7 +4,7 @@ import { Mail, Lock, User as UserIcon, ArrowLeft } from "lucide-react";
 import { StrydeLogo } from "@/components/StrydeLogo";
 import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable/index";
-import { Field } from "./login";
+
 
 export const Route = createFileRoute("/auth")({
   head: () => ({ meta: [{ title: "Sign in — STRYDE" }] }),
