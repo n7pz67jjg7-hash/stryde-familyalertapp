@@ -4,29 +4,30 @@ import { useEffect, useRef, useState } from "react";
 import { useDeviceStatus } from "@/hooks/useDeviceStatus";
 import { listContacts, type EmergencyContact } from "@/lib/contacts-store";
 import { useAuth } from "@/hooks/useAuth";
+import { supabase } from "@/integrations/supabase/client";
 
 export const Route = createFileRoute("/emergency")({
   head: () => ({ meta: [{ title: "Emergency — STRYDE" }] }),
   component: Emergency,
 });
 
-const COUNTDOWN_SECONDS = 30;
+const COUNTDOWN_SECONDS = 5;
 
 function Emergency() {
   const navigate = useNavigate();
   const { geo, requestGeo } = useDeviceStatus();
-  const { user } = useAuth();
+  const { user, profile } = useAuth();
   const [seconds, setSeconds] = useState(COUNTDOWN_SECONDS);
   const [sent, setSent] = useState(false);
   const [contacts, setContacts] = useState<EmergencyContact[]>([]);
   const audioRef = useRef<AudioContext | null>(null);
+  const persisted = useRef(false);
 
   useEffect(() => {
     requestGeo();
     if (user) listContacts(user.id).then(setContacts).catch(() => {});
   }, [user]); // eslint-disable-line
 
-  // Vibration + warning beep
   useEffect(() => {
     if ("vibrate" in navigator) navigator.vibrate([400, 200, 400, 200, 400]);
     try {
@@ -44,31 +45,37 @@ function Emergency() {
         osc.stop(ctx.currentTime + t + 0.18);
       };
       [0, 0.4, 0.8].forEach(beep);
-    } catch { /* user gesture may be required */ }
+    } catch { /* noop */ }
     return () => { audioRef.current?.close().catch(() => {}); };
   }, []);
 
   useEffect(() => {
-    if (sent) return;
+    if (sent || persisted.current) return;
     if (seconds <= 0) {
+      persisted.current = true;
       setSent(true);
-      // Persist event for history
-      try {
-        const events = JSON.parse(localStorage.getItem("stryde.events") ?? "[]");
-        events.unshift({
-          id: crypto.randomUUID(),
-          at: Date.now(),
-          type: "fall",
-          coords: geo.coords,
-          notified: contacts.filter((c) => c.priority).map((c) => c.name),
-        });
-        localStorage.setItem("stryde.events", JSON.stringify(events.slice(0, 100)));
-      } catch { /* noop */ }
+      if (user && profile) {
+        const snapshot = {
+          name: profile.full_name,
+          age: profile.age,
+          blood_type: profile.blood_type,
+          conditions: profile.medical_conditions,
+          medications: profile.medications,
+          emergency_contact_name: profile.emergency_contact_name,
+          emergency_contact_phone: profile.emergency_contact_phone,
+        };
+        supabase.from("emergency_events").insert({
+          patient_id: user.id,
+          lat: geo.coords?.lat ?? null,
+          lng: geo.coords?.lng ?? null,
+          snapshot,
+        }).then(() => {});
+      }
       return;
     }
     const t = setTimeout(() => setSeconds((s) => s - 1), 1000);
     return () => clearTimeout(t);
-  }, [seconds, sent, contacts, geo.coords]);
+  }, [seconds, sent, geo.coords, user, profile]);
 
   const cancel = () => {
     if ("vibrate" in navigator) navigator.vibrate(0);
@@ -103,10 +110,10 @@ function Emergency() {
         </div>
 
         <h2 className="text-2xl font-bold text-foreground">
-          {sent ? "Help Notified" : <>Emergency <span className="text-destructive">Detected</span></>}
+          {sent ? "Caregivers Notified" : <>Emergency <span className="text-destructive">Detected</span></>}
         </h2>
         <p className="mt-2 text-center text-sm text-muted-foreground">
-          {sent ? "Your contacts have been alerted with your live location." : <>Sending alert in <span className="font-bold text-destructive">{seconds}s</span>. Tap cancel if you're safe.</>}
+          {sent ? "All linked caregivers received your alert with location and medical info." : <>Alerting in <span className="font-bold text-destructive">{seconds}s</span>. Tap cancel if you're safe.</>}
         </p>
 
         <div className="mt-6 w-full rounded-2xl bg-surface p-4 shadow-card">
@@ -115,27 +122,17 @@ function Emergency() {
             <MapPin className="h-4 w-4 text-primary" />
           </div>
           <p className="mt-1 text-sm font-semibold">
-            {geo.coords
-              ? `${geo.coords.lat.toFixed(5)}, ${geo.coords.lng.toFixed(5)}`
-              : geo.status === "denied" ? "Permission denied" : "Locating…"}
+            {geo.coords ? `${geo.coords.lat.toFixed(5)}, ${geo.coords.lng.toFixed(5)}` : geo.status === "denied" ? "Permission denied" : "Locating…"}
           </p>
           {geo.coords && (
-            <a
-              href={`https://www.google.com/maps/search/?api=1&query=${geo.coords.lat},${geo.coords.lng}`}
-              target="_blank"
-              rel="noreferrer"
-              className="mt-2 inline-block text-xs font-semibold text-primary"
-            >
-              Open in Maps →
-            </a>
+            <a href={`https://www.google.com/maps/search/?api=1&query=${geo.coords.lat},${geo.coords.lng}`} target="_blank" rel="noreferrer"
+              className="mt-2 inline-block text-xs font-semibold text-primary">Open in Maps →</a>
           )}
         </div>
 
         {priorityContact && (
-          <a
-            href={`tel:${priorityContact.phone.replace(/\s/g, "")}`}
-            className="mt-3 flex w-full items-center justify-between rounded-2xl bg-success p-4 text-success-foreground shadow-card"
-          >
+          <a href={`tel:${priorityContact.phone.replace(/\s/g, "")}`}
+            className="mt-3 flex w-full items-center justify-between rounded-2xl bg-success p-4 text-success-foreground shadow-card">
             <span className="flex items-center gap-2 text-sm font-semibold">
               <Phone className="h-4 w-4" /> Call {priorityContact.name} now
             </span>
@@ -143,10 +140,8 @@ function Emergency() {
           </a>
         )}
 
-        <button
-          onClick={cancel}
-          className={`mt-6 mb-8 h-14 w-full rounded-2xl font-semibold shadow-elevated active:scale-[0.98] ${sent ? "bg-primary text-primary-foreground" : "bg-destructive text-destructive-foreground"}`}
-        >
+        <button onClick={cancel}
+          className={`mt-6 mb-8 h-14 w-full rounded-2xl font-semibold shadow-elevated active:scale-[0.98] ${sent ? "bg-primary text-primary-foreground" : "bg-destructive text-destructive-foreground"}`}>
           {sent ? "Back to Dashboard" : "Cancel Alert"}
         </button>
       </div>

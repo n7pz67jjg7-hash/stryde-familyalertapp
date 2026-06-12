@@ -14,6 +14,27 @@ export type Database = {
   }
   public: {
     Tables: {
+      caregiver_patient_links: {
+        Row: {
+          caregiver_id: string
+          created_at: string
+          id: string
+          patient_id: string
+        }
+        Insert: {
+          caregiver_id: string
+          created_at?: string
+          id?: string
+          patient_id: string
+        }
+        Update: {
+          caregiver_id?: string
+          created_at?: string
+          id?: string
+          patient_id?: string
+        }
+        Relationships: []
+      }
       emergency_contacts: {
         Row: {
           created_at: string
@@ -47,33 +68,126 @@ export type Database = {
         }
         Relationships: []
       }
+      emergency_events: {
+        Row: {
+          id: string
+          lat: number | null
+          lng: number | null
+          patient_id: string
+          resolved_at: string | null
+          resolved_by: string | null
+          snapshot: Json
+          triggered_at: string
+        }
+        Insert: {
+          id?: string
+          lat?: number | null
+          lng?: number | null
+          patient_id: string
+          resolved_at?: string | null
+          resolved_by?: string | null
+          snapshot?: Json
+          triggered_at?: string
+        }
+        Update: {
+          id?: string
+          lat?: number | null
+          lng?: number | null
+          patient_id?: string
+          resolved_at?: string | null
+          resolved_by?: string | null
+          snapshot?: Json
+          triggered_at?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
+          age: number | null
+          blood_type: string | null
           created_at: string
           email: string | null
+          emergency_contact_name: string | null
+          emergency_contact_phone: string | null
           full_name: string
+          gender: string | null
+          height_cm: number | null
           id: string
+          language: string
+          medical_conditions: string[]
+          medications: string[]
+          onboarded_at: string | null
+          patient_code: string | null
+          role: Database["public"]["Enums"]["app_role"]
           subscription_tier: Database["public"]["Enums"]["subscription_tier"]
           trial_ends_at: string | null
           updated_at: string
+          weight_kg: number | null
+        }
+        Insert: {
+          age?: number | null
+          blood_type?: string | null
+          created_at?: string
+          email?: string | null
+          emergency_contact_name?: string | null
+          emergency_contact_phone?: string | null
+          full_name?: string
+          gender?: string | null
+          height_cm?: number | null
+          id: string
+          language?: string
+          medical_conditions?: string[]
+          medications?: string[]
+          onboarded_at?: string | null
+          patient_code?: string | null
+          role?: Database["public"]["Enums"]["app_role"]
+          subscription_tier?: Database["public"]["Enums"]["subscription_tier"]
+          trial_ends_at?: string | null
+          updated_at?: string
+          weight_kg?: number | null
+        }
+        Update: {
+          age?: number | null
+          blood_type?: string | null
+          created_at?: string
+          email?: string | null
+          emergency_contact_name?: string | null
+          emergency_contact_phone?: string | null
+          full_name?: string
+          gender?: string | null
+          height_cm?: number | null
+          id?: string
+          language?: string
+          medical_conditions?: string[]
+          medications?: string[]
+          onboarded_at?: string | null
+          patient_code?: string | null
+          role?: Database["public"]["Enums"]["app_role"]
+          subscription_tier?: Database["public"]["Enums"]["subscription_tier"]
+          trial_ends_at?: string | null
+          updated_at?: string
+          weight_kg?: number | null
+        }
+        Relationships: []
+      }
+      user_roles: {
+        Row: {
+          created_at: string
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
         }
         Insert: {
           created_at?: string
-          email?: string | null
-          full_name?: string
-          id: string
-          subscription_tier?: Database["public"]["Enums"]["subscription_tier"]
-          trial_ends_at?: string | null
-          updated_at?: string
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
         }
         Update: {
           created_at?: string
-          email?: string | null
-          full_name?: string
           id?: string
-          subscription_tier?: Database["public"]["Enums"]["subscription_tier"]
-          trial_ends_at?: string | null
-          updated_at?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
         }
         Relationships: []
       }
@@ -82,9 +196,17 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      generate_patient_code: { Args: never; Returns: string }
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
+      app_role: "patient" | "caregiver"
       subscription_tier: "free" | "plus" | "premium"
     }
     CompositeTypes: {
@@ -213,6 +335,7 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
+      app_role: ["patient", "caregiver"],
       subscription_tier: ["free", "plus", "premium"],
     },
   },

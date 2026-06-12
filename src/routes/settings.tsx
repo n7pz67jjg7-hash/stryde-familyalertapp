@@ -17,7 +17,20 @@ const prefs: Row[] = [
   { icon: SettingsIcon, title: "App Settings", desc: "General preferences" },
 ];
 const about: Row[] = [
-  { icon: Info, title: "About STRYDE", desc: "Version 1.3.0" },
+  { icon: Info, title: "About STRYDE", desc: "Version 1.4.0" },
+];
+
+const LANGUAGES = [
+  { code: "en", name: "English", available: true },
+  { code: "ar", name: "العربية", available: false },
+  { code: "fr", name: "Français", available: false },
+  { code: "de", name: "Deutsch", available: false },
+  { code: "es", name: "Español", available: false },
+  { code: "it", name: "Italiano", available: false },
+  { code: "tr", name: "Türkçe", available: false },
+  { code: "zh", name: "中文", available: false },
+  { code: "ja", name: "日本語", available: false },
+  { code: "ru", name: "Русский", available: false },
 ];
 
 function Section({ title, rows }: { title: string; rows: Row[] }) {
@@ -84,9 +97,18 @@ function Settings() {
   const limit = TIER_CONTACT_LIMIT[tier];
 
   const account: Row[] = [
-    { icon: User, title: "Medical Profile", desc: "Allergies, blood type, conditions" },
+    { icon: User, title: "Medical Profile", desc: "Blood type, conditions, contact", to: "/medical-profile" },
     { icon: Users, title: "Emergency Contacts", desc: `Up to ${limit === Infinity ? "unlimited" : limit} on ${tier.toUpperCase()}`, to: "/contacts" },
+    { icon: Users, title: profile?.role === "caregiver" ? "Linked Patients" : "My Caregivers", desc: "Manage links and QR code", to: "/link" },
   ];
+
+  const onLanguage = (code: string, available: boolean) => {
+    if (!available) {
+      alert("This language will be available in future updates.");
+      return;
+    }
+    if (user) supabase.from("profiles").update({ language: code }).eq("id", user.id);
+  };
 
   return (
     <MobileShell>
@@ -148,6 +170,21 @@ function Settings() {
 
         <Section title="Account" rows={account} />
         <Section title="Preferences" rows={prefs} />
+
+        <h2 className="mt-6 mb-2 px-1 text-xs uppercase tracking-wider text-muted-foreground">Language</h2>
+        <div className="grid grid-cols-2 gap-2">
+          {LANGUAGES.map((l) => (
+            <button
+              key={l.code}
+              onClick={() => onLanguage(l.code, l.available)}
+              className={`relative rounded-xl border p-3 text-left text-sm shadow-card ${profile?.language === l.code ? "border-primary bg-primary/5" : "border-border bg-surface"} ${!l.available ? "opacity-60" : ""}`}
+            >
+              <div className="font-semibold">{l.name}</div>
+              <div className="text-[10px] uppercase tracking-wide text-muted-foreground">{l.available ? "Available" : "Coming soon"}</div>
+            </button>
+          ))}
+        </div>
+
         <Section title="About" rows={about} />
 
         <button
