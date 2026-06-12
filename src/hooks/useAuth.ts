@@ -3,6 +3,7 @@ import type { Session, User } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
 
 export type SubscriptionTier = "free" | "plus" | "premium";
+export type AppRole = "patient" | "caregiver";
 
 export interface Profile {
   id: string;
@@ -10,6 +11,33 @@ export interface Profile {
   email: string | null;
   subscription_tier: SubscriptionTier;
   trial_ends_at: string | null;
+  role: AppRole;
+  age: number | null;
+  gender: string | null;
+  blood_type: string | null;
+  weight_kg: number | null;
+  height_cm: number | null;
+  emergency_contact_name: string | null;
+  emergency_contact_phone: string | null;
+  medical_conditions: string[];
+  medications: string[];
+  language: string;
+  onboarded_at: string | null;
+  patient_code: string | null;
+}
+
+export function isProfileComplete(p: Profile | null): boolean {
+  if (!p) return false;
+  if (p.role === "caregiver") return !!p.full_name;
+  return !!(
+    p.full_name &&
+    p.age &&
+    p.gender &&
+    p.blood_type &&
+    p.emergency_contact_name &&
+    p.emergency_contact_phone &&
+    p.onboarded_at
+  );
 }
 
 export function useAuth() {
@@ -22,12 +50,8 @@ export function useAuth() {
     const { data: sub } = supabase.auth.onAuthStateChange((_e, s) => {
       setSession(s);
       setUser(s?.user ?? null);
-      if (s?.user) {
-        // defer to avoid deadlocks
-        setTimeout(() => fetchProfile(s.user.id), 0);
-      } else {
-        setProfile(null);
-      }
+      if (s?.user) setTimeout(() => fetchProfile(s.user.id), 0);
+      else setProfile(null);
     });
 
     supabase.auth.getSession().then(({ data }) => {
@@ -42,10 +66,16 @@ export function useAuth() {
 
   const fetchProfile = async (id: string) => {
     const { data } = await supabase.from("profiles").select("*").eq("id", id).maybeSingle();
-    if (data) setProfile(data as Profile);
+    if (data) setProfile(data as unknown as Profile);
   };
 
-  return { session, user, profile, loading, refreshProfile: () => user && fetchProfile(user.id) };
+  return {
+    session,
+    user,
+    profile,
+    loading,
+    refreshProfile: () => user && fetchProfile(user.id),
+  };
 }
 
 export const TIER_CONTACT_LIMIT: Record<SubscriptionTier, number> = {

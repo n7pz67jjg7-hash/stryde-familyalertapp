@@ -1,15 +1,19 @@
 import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { Mail, Lock, User as UserIcon, ArrowLeft } from "lucide-react";
+import { Mail, Lock, User as UserIcon, ArrowLeft, HeartPulse, Users } from "lucide-react";
 import { StrydeLogo } from "@/components/StrydeLogo";
 import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable/index";
+import type { AppRole } from "@/hooks/useAuth";
+
+export const Route = createFileRoute("/auth")({
+  head: () => ({ meta: [{ title: "Sign in — STRYDE" }] }),
+  component: AuthPage,
+});
 
 function Field({
   icon: Icon, type, placeholder, value, onChange,
-}: {
-  icon: typeof Mail; type: string; placeholder: string; value: string; onChange: (v: string) => void;
-}) {
+}: { icon: typeof Mail; type: string; placeholder: string; value: string; onChange: (v: string) => void }) {
   return (
     <label className="flex h-14 items-center gap-3 rounded-2xl border border-border bg-surface px-4">
       <Icon className="h-5 w-5 text-muted-foreground" />
@@ -24,16 +28,10 @@ function Field({
   );
 }
 
-
-
-export const Route = createFileRoute("/auth")({
-  head: () => ({ meta: [{ title: "Sign in — STRYDE" }] }),
-  component: AuthPage,
-});
-
 function AuthPage() {
   const navigate = useNavigate();
   const [mode, setMode] = useState<"login" | "signup">("login");
+  const [role, setRole] = useState<AppRole>("patient");
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -58,7 +56,7 @@ function AuthPage() {
           password,
           options: {
             emailRedirectTo: `${window.location.origin}/dashboard`,
-            data: { full_name: fullName.trim() },
+            data: { full_name: fullName.trim(), role },
           },
         });
         if (error) throw error;
@@ -101,7 +99,13 @@ function AuthPage() {
 
       <form className="mt-8 flex flex-col gap-3" onSubmit={submit}>
         {mode === "signup" && (
-          <Field icon={UserIcon} type="text" placeholder="Full name" value={fullName} onChange={setFullName} />
+          <>
+            <div className="grid grid-cols-2 gap-2">
+              <RoleButton active={role === "patient"} onClick={() => setRole("patient")} icon={HeartPulse} title="Patient" desc="I want to be monitored" />
+              <RoleButton active={role === "caregiver"} onClick={() => setRole("caregiver")} icon={Users} title="Caregiver" desc="I monitor someone" />
+            </div>
+            <Field icon={UserIcon} type="text" placeholder="Full name" value={fullName} onChange={setFullName} />
+          </>
         )}
         <Field icon={Mail} type="email" placeholder="Email address" value={email} onChange={setEmail} />
         <Field icon={Lock} type="password" placeholder="Password" value={password} onChange={setPassword} />
@@ -138,5 +142,21 @@ function AuthPage() {
         </button>
       </p>
     </div>
+  );
+}
+
+function RoleButton({
+  active, onClick, icon: Icon, title, desc,
+}: { active: boolean; onClick: () => void; icon: typeof HeartPulse; title: string; desc: string }) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className={`flex flex-col items-start gap-1 rounded-2xl border p-3 text-left transition-all ${active ? "border-primary bg-primary/5 ring-2 ring-primary/30" : "border-border bg-surface"}`}
+    >
+      <Icon className={`h-5 w-5 ${active ? "text-primary" : "text-muted-foreground"}`} />
+      <span className="text-sm font-semibold">{title}</span>
+      <span className="text-[11px] text-muted-foreground">{desc}</span>
+    </button>
   );
 }
