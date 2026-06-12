@@ -170,6 +170,21 @@ function Settings() {
 
         <Section title="Account" rows={account} />
         <Section title="Preferences" rows={prefs} />
+
+        <h2 className="mt-6 mb-2 px-1 text-xs uppercase tracking-wider text-muted-foreground">Language</h2>
+        <div className="grid grid-cols-2 gap-2">
+          {LANGUAGES.map((l) => (
+            <button
+              key={l.code}
+              onClick={() => onLanguage(l.code, l.available)}
+              className={`relative rounded-xl border p-3 text-left text-sm shadow-card ${profile?.language === l.code ? "border-primary bg-primary/5" : "border-border bg-surface"} ${!l.available ? "opacity-60" : ""}`}
+            >
+              <div className="font-semibold">{l.name}</div>
+              <div className="text-[10px] uppercase tracking-wide text-muted-foreground">{l.available ? "Available" : "Coming soon"}</div>
+            </button>
+          ))}
+        </div>
+
         <Section title="About" rows={about} />
 
         <button
