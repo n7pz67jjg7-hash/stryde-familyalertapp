@@ -13,14 +13,18 @@ import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as RegisterRouteImport } from './routes/register'
 import { Route as PlansRouteImport } from './routes/plans'
+import { Route as OnboardingRouteImport } from './routes/onboarding'
 import { Route as NotificationsRouteImport } from './routes/notifications'
+import { Route as MedicalProfileRouteImport } from './routes/medical-profile'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as LocationRouteImport } from './routes/location'
+import { Route as LinkRouteImport } from './routes/link'
 import { Route as HistoryRouteImport } from './routes/history'
 import { Route as EmergencyRouteImport } from './routes/emergency'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as ContactsRouteImport } from './routes/contacts'
 import { Route as AuthRouteImport } from './routes/auth'
+import { Route as AlertsRouteImport } from './routes/alerts'
 import { Route as IndexRouteImport } from './routes/index'
 
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
@@ -43,9 +47,19 @@ const PlansRoute = PlansRouteImport.update({
   path: '/plans',
   getParentRoute: () => rootRouteImport,
 } as any)
+const OnboardingRoute = OnboardingRouteImport.update({
+  id: '/onboarding',
+  path: '/onboarding',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const NotificationsRoute = NotificationsRouteImport.update({
   id: '/notifications',
   path: '/notifications',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MedicalProfileRoute = MedicalProfileRouteImport.update({
+  id: '/medical-profile',
+  path: '/medical-profile',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LoginRoute = LoginRouteImport.update({
@@ -56,6 +70,11 @@ const LoginRoute = LoginRouteImport.update({
 const LocationRoute = LocationRouteImport.update({
   id: '/location',
   path: '/location',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LinkRoute = LinkRouteImport.update({
+  id: '/link',
+  path: '/link',
   getParentRoute: () => rootRouteImport,
 } as any)
 const HistoryRoute = HistoryRouteImport.update({
@@ -83,6 +102,11 @@ const AuthRoute = AuthRouteImport.update({
   path: '/auth',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AlertsRoute = AlertsRouteImport.update({
+  id: '/alerts',
+  path: '/alerts',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -91,14 +115,18 @@ const IndexRoute = IndexRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/alerts': typeof AlertsRoute
   '/auth': typeof AuthRoute
   '/contacts': typeof ContactsRoute
   '/dashboard': typeof DashboardRoute
   '/emergency': typeof EmergencyRoute
   '/history': typeof HistoryRoute
+  '/link': typeof LinkRoute
   '/location': typeof LocationRoute
   '/login': typeof LoginRoute
+  '/medical-profile': typeof MedicalProfileRoute
   '/notifications': typeof NotificationsRoute
+  '/onboarding': typeof OnboardingRoute
   '/plans': typeof PlansRoute
   '/register': typeof RegisterRoute
   '/settings': typeof SettingsRoute
@@ -106,14 +134,18 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/alerts': typeof AlertsRoute
   '/auth': typeof AuthRoute
   '/contacts': typeof ContactsRoute
   '/dashboard': typeof DashboardRoute
   '/emergency': typeof EmergencyRoute
   '/history': typeof HistoryRoute
+  '/link': typeof LinkRoute
   '/location': typeof LocationRoute
   '/login': typeof LoginRoute
+  '/medical-profile': typeof MedicalProfileRoute
   '/notifications': typeof NotificationsRoute
+  '/onboarding': typeof OnboardingRoute
   '/plans': typeof PlansRoute
   '/register': typeof RegisterRoute
   '/settings': typeof SettingsRoute
@@ -122,14 +154,18 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/alerts': typeof AlertsRoute
   '/auth': typeof AuthRoute
   '/contacts': typeof ContactsRoute
   '/dashboard': typeof DashboardRoute
   '/emergency': typeof EmergencyRoute
   '/history': typeof HistoryRoute
+  '/link': typeof LinkRoute
   '/location': typeof LocationRoute
   '/login': typeof LoginRoute
+  '/medical-profile': typeof MedicalProfileRoute
   '/notifications': typeof NotificationsRoute
+  '/onboarding': typeof OnboardingRoute
   '/plans': typeof PlansRoute
   '/register': typeof RegisterRoute
   '/settings': typeof SettingsRoute
@@ -139,14 +175,18 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/alerts'
     | '/auth'
     | '/contacts'
     | '/dashboard'
     | '/emergency'
     | '/history'
+    | '/link'
     | '/location'
     | '/login'
+    | '/medical-profile'
     | '/notifications'
+    | '/onboarding'
     | '/plans'
     | '/register'
     | '/settings'
@@ -154,14 +194,18 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/alerts'
     | '/auth'
     | '/contacts'
     | '/dashboard'
     | '/emergency'
     | '/history'
+    | '/link'
     | '/location'
     | '/login'
+    | '/medical-profile'
     | '/notifications'
+    | '/onboarding'
     | '/plans'
     | '/register'
     | '/settings'
@@ -169,14 +213,18 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/alerts'
     | '/auth'
     | '/contacts'
     | '/dashboard'
     | '/emergency'
     | '/history'
+    | '/link'
     | '/location'
     | '/login'
+    | '/medical-profile'
     | '/notifications'
+    | '/onboarding'
     | '/plans'
     | '/register'
     | '/settings'
@@ -185,14 +233,18 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AlertsRoute: typeof AlertsRoute
   AuthRoute: typeof AuthRoute
   ContactsRoute: typeof ContactsRoute
   DashboardRoute: typeof DashboardRoute
   EmergencyRoute: typeof EmergencyRoute
   HistoryRoute: typeof HistoryRoute
+  LinkRoute: typeof LinkRoute
   LocationRoute: typeof LocationRoute
   LoginRoute: typeof LoginRoute
+  MedicalProfileRoute: typeof MedicalProfileRoute
   NotificationsRoute: typeof NotificationsRoute
+  OnboardingRoute: typeof OnboardingRoute
   PlansRoute: typeof PlansRoute
   RegisterRoute: typeof RegisterRoute
   SettingsRoute: typeof SettingsRoute
@@ -229,11 +281,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PlansRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/onboarding': {
+      id: '/onboarding'
+      path: '/onboarding'
+      fullPath: '/onboarding'
+      preLoaderRoute: typeof OnboardingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/notifications': {
       id: '/notifications'
       path: '/notifications'
       fullPath: '/notifications'
       preLoaderRoute: typeof NotificationsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/medical-profile': {
+      id: '/medical-profile'
+      path: '/medical-profile'
+      fullPath: '/medical-profile'
+      preLoaderRoute: typeof MedicalProfileRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/login': {
@@ -248,6 +314,13 @@ declare module '@tanstack/react-router' {
       path: '/location'
       fullPath: '/location'
       preLoaderRoute: typeof LocationRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/link': {
+      id: '/link'
+      path: '/link'
+      fullPath: '/link'
+      preLoaderRoute: typeof LinkRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/history': {
@@ -285,6 +358,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/alerts': {
+      id: '/alerts'
+      path: '/alerts'
+      fullPath: '/alerts'
+      preLoaderRoute: typeof AlertsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -297,14 +377,18 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AlertsRoute: AlertsRoute,
   AuthRoute: AuthRoute,
   ContactsRoute: ContactsRoute,
   DashboardRoute: DashboardRoute,
   EmergencyRoute: EmergencyRoute,
   HistoryRoute: HistoryRoute,
+  LinkRoute: LinkRoute,
   LocationRoute: LocationRoute,
   LoginRoute: LoginRoute,
+  MedicalProfileRoute: MedicalProfileRoute,
   NotificationsRoute: NotificationsRoute,
+  OnboardingRoute: OnboardingRoute,
   PlansRoute: PlansRoute,
   RegisterRoute: RegisterRoute,
   SettingsRoute: SettingsRoute,
@@ -313,13 +397,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
