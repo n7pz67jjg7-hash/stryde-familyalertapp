@@ -101,9 +101,101 @@ export type Database = {
         }
         Relationships: []
       }
+      medication_logs: {
+        Row: {
+          created_at: string
+          id: string
+          medication_id: string
+          patient_id: string
+          status: string
+          taken_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          medication_id: string
+          patient_id: string
+          status?: string
+          taken_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          medication_id?: string
+          patient_id?: string
+          status?: string
+          taken_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "medication_logs_medication_id_fkey"
+            columns: ["medication_id"]
+            isOneToOne: false
+            referencedRelation: "medications"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "medication_logs_patient_id_fkey"
+            columns: ["patient_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      medications: {
+        Row: {
+          active: boolean
+          created_at: string
+          dose: string | null
+          frequency: string | null
+          id: string
+          name: string
+          notes: string | null
+          patient_id: string
+          reminder_time: string | null
+          updated_at: string
+        }
+        Insert: {
+          active?: boolean
+          created_at?: string
+          dose?: string | null
+          frequency?: string | null
+          id?: string
+          name: string
+          notes?: string | null
+          patient_id: string
+          reminder_time?: string | null
+          updated_at?: string
+        }
+        Update: {
+          active?: boolean
+          created_at?: string
+          dose?: string | null
+          frequency?: string | null
+          id?: string
+          name?: string
+          notes?: string | null
+          patient_id?: string
+          reminder_time?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "medications_patient_id_fkey"
+            columns: ["patient_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
+          address: string | null
           age: number | null
+          allergies_drug: string[]
+          allergies_food: string[]
           blood_type: string | null
           created_at: string
           email: string | null
@@ -115,9 +207,12 @@ export type Database = {
           id: string
           language: string
           medical_conditions: string[]
+          medical_notes: string | null
           medications: string[]
+          national_id: string | null
           onboarded_at: string | null
           patient_code: string | null
+          phone: string | null
           role: Database["public"]["Enums"]["app_role"]
           subscription_tier: Database["public"]["Enums"]["subscription_tier"]
           trial_ends_at: string | null
@@ -125,7 +220,10 @@ export type Database = {
           weight_kg: number | null
         }
         Insert: {
+          address?: string | null
           age?: number | null
+          allergies_drug?: string[]
+          allergies_food?: string[]
           blood_type?: string | null
           created_at?: string
           email?: string | null
@@ -137,9 +235,12 @@ export type Database = {
           id: string
           language?: string
           medical_conditions?: string[]
+          medical_notes?: string | null
           medications?: string[]
+          national_id?: string | null
           onboarded_at?: string | null
           patient_code?: string | null
+          phone?: string | null
           role?: Database["public"]["Enums"]["app_role"]
           subscription_tier?: Database["public"]["Enums"]["subscription_tier"]
           trial_ends_at?: string | null
@@ -147,7 +248,10 @@ export type Database = {
           weight_kg?: number | null
         }
         Update: {
+          address?: string | null
           age?: number | null
+          allergies_drug?: string[]
+          allergies_food?: string[]
           blood_type?: string | null
           created_at?: string
           email?: string | null
@@ -159,9 +263,12 @@ export type Database = {
           id?: string
           language?: string
           medical_conditions?: string[]
+          medical_notes?: string | null
           medications?: string[]
+          national_id?: string | null
           onboarded_at?: string | null
           patient_code?: string | null
+          phone?: string | null
           role?: Database["public"]["Enums"]["app_role"]
           subscription_tier?: Database["public"]["Enums"]["subscription_tier"]
           trial_ends_at?: string | null
