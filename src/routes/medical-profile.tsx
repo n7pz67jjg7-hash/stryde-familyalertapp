@@ -10,8 +10,10 @@ export const Route = createFileRoute("/medical-profile")({
   component: MedicalProfile,
 });
 
-const CONDITIONS = ["Diabetes", "Hypertension", "Heart Disease", "Previous Stroke", "Epilepsy", "Asthma", "Other"];
+const CONDITIONS = ["Diabetes", "Hypertension", "Heart Disease", "Previous Stroke", "Epilepsy", "Asthma", "Kidney Disease", "Liver Disease", "Other"];
 const BLOOD = ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"];
+
+function csv(s: string) { return s.split(",").map((x) => x.trim()).filter(Boolean); }
 
 function MedicalProfile() {
   const navigate = useNavigate();
@@ -22,11 +24,17 @@ function MedicalProfile() {
   const [fullName, setFullName] = useState("");
   const [age, setAge] = useState("");
   const [gender, setGender] = useState("");
+  const [phone, setPhone] = useState("");
+  const [nationalId, setNationalId] = useState("");
+  const [address, setAddress] = useState("");
   const [bloodType, setBloodType] = useState("");
   const [weight, setWeight] = useState("");
   const [height, setHeight] = useState("");
   const [conditions, setConditions] = useState<string[]>([]);
   const [medications, setMedications] = useState("");
+  const [allergiesDrug, setAllergiesDrug] = useState("");
+  const [allergiesFood, setAllergiesFood] = useState("");
+  const [medicalNotes, setMedicalNotes] = useState("");
   const [ecName, setEcName] = useState("");
   const [ecPhone, setEcPhone] = useState("");
 
@@ -36,14 +44,21 @@ function MedicalProfile() {
 
   useEffect(() => {
     if (!profile) return;
+    const p: any = profile;
     setFullName(profile.full_name || "");
     setAge(profile.age?.toString() || "");
     setGender(profile.gender || "");
+    setPhone(p.phone || "");
+    setNationalId(p.national_id || "");
+    setAddress(p.address || "");
     setBloodType(profile.blood_type || "");
     setWeight(profile.weight_kg?.toString() || "");
     setHeight(profile.height_cm?.toString() || "");
     setConditions(profile.medical_conditions || []);
     setMedications((profile.medications || []).join(", "));
+    setAllergiesDrug((p.allergies_drug || []).join(", "));
+    setAllergiesFood((p.allergies_food || []).join(", "));
+    setMedicalNotes(p.medical_notes || "");
     setEcName(profile.emergency_contact_name || "");
     setEcPhone(profile.emergency_contact_phone || "");
   }, [profile]);
@@ -55,15 +70,21 @@ function MedicalProfile() {
       full_name: fullName.trim(),
       age: age ? parseInt(age) : null,
       gender: gender || null,
+      phone: phone.trim() || null,
+      national_id: nationalId.trim() || null,
+      address: address.trim() || null,
       blood_type: bloodType || null,
       weight_kg: weight ? parseFloat(weight) : null,
       height_cm: height ? parseFloat(height) : null,
       medical_conditions: conditions,
-      medications: medications.split(",").map((m) => m.trim()).filter(Boolean),
+      medications: csv(medications),
+      allergies_drug: csv(allergiesDrug),
+      allergies_food: csv(allergiesFood),
+      medical_notes: medicalNotes.trim() || null,
       emergency_contact_name: ecName.trim() || null,
       emergency_contact_phone: ecPhone.trim() || null,
       onboarded_at: profile?.onboarded_at ?? new Date().toISOString(),
-    }).eq("id", user.id);
+    } as any).eq("id", user.id);
     setSaving(false);
     setMsg(error ? error.message : "Saved ✓");
     if (!error) await refreshProfile();
@@ -86,6 +107,9 @@ function MedicalProfile() {
             <Input label="Age" type="number" value={age} onChange={setAge} />
             <Input label="Gender" value={gender} onChange={setGender} placeholder="Male / Female / Other" />
           </div>
+          <Input label="Phone" type="tel" value={phone} onChange={setPhone} placeholder="+20 100 000 0000" />
+          <Input label="National ID" value={nationalId} onChange={setNationalId} />
+          <Input label="Home address" value={address} onChange={setAddress} />
         </Section>
 
         <Section title="Vitals">
@@ -119,6 +143,17 @@ function MedicalProfile() {
             })}
           </div>
           <Input label="Medications (comma-separated)" value={medications} onChange={setMedications} />
+          <p className="text-xs text-muted-foreground">Manage doses & reminders on the Medications page.</p>
+        </Section>
+
+        <Section title="Allergies & Notes">
+          <Input label="Drug allergies (comma-separated)" value={allergiesDrug} onChange={setAllergiesDrug} placeholder="Penicillin, Aspirin" />
+          <Input label="Food allergies (comma-separated)" value={allergiesFood} onChange={setAllergiesFood} placeholder="Peanuts, Shellfish" />
+          <label className="block">
+            <span className="mb-1 block text-xs font-medium text-muted-foreground">Additional medical notes</span>
+            <textarea value={medicalNotes} onChange={(e) => setMedicalNotes(e.target.value)} rows={4}
+              className="w-full rounded-xl border border-border bg-background px-3 py-2.5 text-sm outline-none focus:ring-2 focus:ring-ring" />
+          </label>
         </Section>
 
         <Section title="Emergency Contact">

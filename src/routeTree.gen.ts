@@ -15,6 +15,7 @@ import { Route as RegisterRouteImport } from './routes/register'
 import { Route as PlansRouteImport } from './routes/plans'
 import { Route as OnboardingRouteImport } from './routes/onboarding'
 import { Route as NotificationsRouteImport } from './routes/notifications'
+import { Route as MedicationsRouteImport } from './routes/medications'
 import { Route as MedicalProfileRouteImport } from './routes/medical-profile'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as LocationRouteImport } from './routes/location'
@@ -55,6 +56,11 @@ const OnboardingRoute = OnboardingRouteImport.update({
 const NotificationsRoute = NotificationsRouteImport.update({
   id: '/notifications',
   path: '/notifications',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MedicationsRoute = MedicationsRouteImport.update({
+  id: '/medications',
+  path: '/medications',
   getParentRoute: () => rootRouteImport,
 } as any)
 const MedicalProfileRoute = MedicalProfileRouteImport.update({
@@ -125,6 +131,7 @@ export interface FileRoutesByFullPath {
   '/location': typeof LocationRoute
   '/login': typeof LoginRoute
   '/medical-profile': typeof MedicalProfileRoute
+  '/medications': typeof MedicationsRoute
   '/notifications': typeof NotificationsRoute
   '/onboarding': typeof OnboardingRoute
   '/plans': typeof PlansRoute
@@ -144,6 +151,7 @@ export interface FileRoutesByTo {
   '/location': typeof LocationRoute
   '/login': typeof LoginRoute
   '/medical-profile': typeof MedicalProfileRoute
+  '/medications': typeof MedicationsRoute
   '/notifications': typeof NotificationsRoute
   '/onboarding': typeof OnboardingRoute
   '/plans': typeof PlansRoute
@@ -164,6 +172,7 @@ export interface FileRoutesById {
   '/location': typeof LocationRoute
   '/login': typeof LoginRoute
   '/medical-profile': typeof MedicalProfileRoute
+  '/medications': typeof MedicationsRoute
   '/notifications': typeof NotificationsRoute
   '/onboarding': typeof OnboardingRoute
   '/plans': typeof PlansRoute
@@ -185,6 +194,7 @@ export interface FileRouteTypes {
     | '/location'
     | '/login'
     | '/medical-profile'
+    | '/medications'
     | '/notifications'
     | '/onboarding'
     | '/plans'
@@ -204,6 +214,7 @@ export interface FileRouteTypes {
     | '/location'
     | '/login'
     | '/medical-profile'
+    | '/medications'
     | '/notifications'
     | '/onboarding'
     | '/plans'
@@ -223,6 +234,7 @@ export interface FileRouteTypes {
     | '/location'
     | '/login'
     | '/medical-profile'
+    | '/medications'
     | '/notifications'
     | '/onboarding'
     | '/plans'
@@ -243,6 +255,7 @@ export interface RootRouteChildren {
   LocationRoute: typeof LocationRoute
   LoginRoute: typeof LoginRoute
   MedicalProfileRoute: typeof MedicalProfileRoute
+  MedicationsRoute: typeof MedicationsRoute
   NotificationsRoute: typeof NotificationsRoute
   OnboardingRoute: typeof OnboardingRoute
   PlansRoute: typeof PlansRoute
@@ -293,6 +306,13 @@ declare module '@tanstack/react-router' {
       path: '/notifications'
       fullPath: '/notifications'
       preLoaderRoute: typeof NotificationsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/medications': {
+      id: '/medications'
+      path: '/medications'
+      fullPath: '/medications'
+      preLoaderRoute: typeof MedicationsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/medical-profile': {
@@ -387,6 +407,7 @@ const rootRouteChildren: RootRouteChildren = {
   LocationRoute: LocationRoute,
   LoginRoute: LoginRoute,
   MedicalProfileRoute: MedicalProfileRoute,
+  MedicationsRoute: MedicationsRoute,
   NotificationsRoute: NotificationsRoute,
   OnboardingRoute: OnboardingRoute,
   PlansRoute: PlansRoute,
