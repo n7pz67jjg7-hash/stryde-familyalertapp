@@ -40,7 +40,7 @@ function Landing() {
           STRYDE
         </h1>
         <p className="relative mt-3 text-base text-muted-foreground">
-          We've got your back<br />when it matters most.
+          AI-Based Emergency Detection &amp; Family Alert App
         </p>
 
         <div className="relative mt-10 flex w-full flex-col gap-3">

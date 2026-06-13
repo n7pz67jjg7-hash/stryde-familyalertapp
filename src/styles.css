@@ -49,85 +49,108 @@
 :root {
   --radius: 1rem;
 
-  /* STRYDE — clean medical (white / blue / teal / light gray) */
-  --background: oklch(0.985 0.005 230);
-  --foreground: oklch(0.22 0.04 250);
+  /* STRYDE HealthTech palette
+     Primary  #0EA5E9 sky-500
+     Success  #10B981 emerald-500
+     Danger   #EF4444 red-500
+     Warning  #F59E0B amber-500
+     Bg       #F8FAFC slate-50
+     Text     #0F172A slate-900
+  */
+  --background: oklch(0.984 0.003 247);   /* #F8FAFC */
+  --foreground: oklch(0.21 0.034 264);    /* #0F172A */
 
   --surface: oklch(1 0 0);
-  --surface-elevated: oklch(0.97 0.01 230);
+  --surface-elevated: oklch(0.975 0.005 247);
 
   --card: oklch(1 0 0);
-  --card-foreground: oklch(0.22 0.04 250);
+  --card-foreground: oklch(0.21 0.034 264);
   --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.22 0.04 250);
+  --popover-foreground: oklch(0.21 0.034 264);
 
-  --primary: oklch(0.58 0.16 245);            /* medical blue */
+  --primary: oklch(0.685 0.156 232);            /* #0EA5E9 */
   --primary-foreground: oklch(0.99 0 0);
-  --primary-glow: oklch(0.72 0.13 220);
+  --primary-glow: oklch(0.78 0.12 220);
 
-  --secondary: oklch(0.95 0.02 220);
-  --secondary-foreground: oklch(0.3 0.05 250);
+  --secondary: oklch(0.962 0.012 236);          /* slate-100 */
+  --secondary-foreground: oklch(0.27 0.04 257);
 
-  --muted: oklch(0.96 0.01 230);
-  --muted-foreground: oklch(0.5 0.03 240);
+  --muted: oklch(0.968 0.007 247);              /* slate-50/100 */
+  --muted-foreground: oklch(0.5 0.024 257);     /* slate-500 */
 
-  --accent: oklch(0.7 0.12 195);              /* teal accent */
-  --accent-foreground: oklch(0.18 0.04 220);
+  --accent: oklch(0.72 0.146 162);              /* emerald accent */
+  --accent-foreground: oklch(0.99 0 0);
 
-  --teal: oklch(0.7 0.12 195);
-  --teal-foreground: oklch(0.18 0.04 220);
+  --teal: oklch(0.72 0.146 162);
+  --teal-foreground: oklch(0.99 0 0);
 
-  --destructive: oklch(0.6 0.22 25);
+  --destructive: oklch(0.637 0.237 25);         /* #EF4444 */
   --destructive-foreground: oklch(0.99 0 0);
 
-  --success: oklch(0.65 0.16 155);
+  --success: oklch(0.696 0.16 162);             /* #10B981 */
   --success-foreground: oklch(0.99 0 0);
 
-  --warning: oklch(0.78 0.16 80);
-  --warning-foreground: oklch(0.2 0.04 80);
+  --warning: oklch(0.78 0.16 70);               /* #F59E0B */
+  --warning-foreground: oklch(0.22 0.04 70);
 
-  --info: oklch(0.62 0.14 230);
+  --info: oklch(0.685 0.156 232);
   --info-foreground: oklch(0.99 0 0);
 
-  --border: oklch(0.92 0.01 230);
-  --input: oklch(0.94 0.01 230);
-  --ring: oklch(0.58 0.16 245);
+  --border: oklch(0.929 0.013 256);             /* slate-200 */
+  --input: oklch(0.929 0.013 256);
+  --ring: oklch(0.685 0.156 232);
 
-  --gradient-primary: linear-gradient(135deg, oklch(0.58 0.16 245), oklch(0.7 0.12 195));
-  --gradient-danger: radial-gradient(circle, oklch(0.6 0.22 25), oklch(0.45 0.2 25));
-  --gradient-hero: linear-gradient(180deg, oklch(0.99 0.005 230) 0%, oklch(0.95 0.02 220) 100%);
-  --shadow-glow: 0 12px 32px -10px oklch(0.58 0.16 245 / 0.35);
-  --shadow-elevated: 0 8px 24px -10px oklch(0.4 0.06 240 / 0.18);
-  --shadow-card: 0 1px 2px oklch(0.4 0.06 240 / 0.06), 0 4px 16px -6px oklch(0.4 0.06 240 / 0.08);
+  --gradient-primary: linear-gradient(135deg, oklch(0.685 0.156 232), oklch(0.72 0.146 162));
+  --gradient-danger: radial-gradient(circle, oklch(0.637 0.237 25), oklch(0.5 0.22 25));
+  --gradient-hero: linear-gradient(180deg, oklch(0.99 0.005 247) 0%, oklch(0.95 0.02 232) 100%);
+  --shadow-glow: 0 12px 32px -10px oklch(0.685 0.156 232 / 0.35);
+  --shadow-elevated: 0 10px 30px -12px oklch(0.4 0.06 240 / 0.18);
+  --shadow-card: 0 1px 2px oklch(0.4 0.06 240 / 0.05), 0 6px 20px -8px oklch(0.4 0.06 240 / 0.08);
 }
 
 .dark {
   color-scheme: dark;
-  --background: oklch(0.18 0.02 245);
-  --foreground: oklch(0.97 0.01 230);
-  --surface: oklch(0.23 0.025 245);
-  --surface-elevated: oklch(0.27 0.03 245);
-  --card: oklch(0.23 0.025 245);
-  --card-foreground: oklch(0.97 0.01 230);
-  --popover: oklch(0.23 0.025 245);
-  --popover-foreground: oklch(0.97 0.01 230);
-  --primary: oklch(0.7 0.15 230);
-  --primary-foreground: oklch(0.15 0.02 245);
-  --primary-glow: oklch(0.78 0.12 200);
-  --secondary: oklch(0.3 0.03 245);
-  --secondary-foreground: oklch(0.97 0.01 230);
-  --muted: oklch(0.28 0.025 245);
-  --muted-foreground: oklch(0.7 0.02 230);
-  --accent: oklch(0.72 0.12 195);
-  --accent-foreground: oklch(0.18 0.04 220);
-  --teal: oklch(0.72 0.12 195);
-  --teal-foreground: oklch(0.15 0.02 245);
-  --border: oklch(0.32 0.025 245);
-  --input: oklch(0.3 0.025 245);
-  --ring: oklch(0.7 0.15 230);
-  --gradient-hero: linear-gradient(180deg, oklch(0.2 0.02 245) 0%, oklch(0.15 0.02 245) 100%);
+  --background: oklch(0.18 0.02 257);
+  --foreground: oklch(0.97 0.005 247);
+  --surface: oklch(0.23 0.025 257);
+  --surface-elevated: oklch(0.27 0.03 257);
+  --card: oklch(0.23 0.025 257);
+  --card-foreground: oklch(0.97 0.005 247);
+  --popover: oklch(0.23 0.025 257);
+  --popover-foreground: oklch(0.97 0.005 247);
+  --primary: oklch(0.74 0.14 232);
+  --primary-foreground: oklch(0.15 0.02 257);
+  --primary-glow: oklch(0.8 0.12 210);
+  --secondary: oklch(0.3 0.03 257);
+  --secondary-foreground: oklch(0.97 0.005 247);
+  --muted: oklch(0.28 0.025 257);
+  --muted-foreground: oklch(0.74 0.02 247);
+  --accent: oklch(0.74 0.14 162);
+  --accent-foreground: oklch(0.15 0.02 257);
+  --teal: oklch(0.74 0.14 162);
+  --teal-foreground: oklch(0.15 0.02 257);
+  --success: oklch(0.74 0.14 162);
+  --warning: oklch(0.82 0.16 80);
+  --destructive: oklch(0.68 0.22 25);
+  --border: oklch(0.32 0.025 257);
+  --input: oklch(0.3 0.025 257);
+  --ring: oklch(0.74 0.14 232);
+  --gradient-hero: linear-gradient(180deg, oklch(0.2 0.02 257) 0%, oklch(0.15 0.02 257) 100%);
   --shadow-card: 0 1px 2px oklch(0 0 0 / 0.3), 0 8px 24px -10px oklch(0 0 0 / 0.5);
 }
+
+/* Accessibility mode: larger text + thicker borders for elderly users */
+.a11y {
+  font-size: 18px;
+}
+.a11y h1 { font-size: 2.25rem; }
+.a11y h2 { font-size: 1.75rem; }
+.a11y button, .a11y a[role="button"], .a11y input, .a11y select, .a11y textarea {
+  min-height: 52px;
+  font-size: 1.0625rem;
+}
+.a11y { --border: oklch(0.82 0.02 256); }
+
 
 @layer base {
   * { border-color: var(--color-border); }
