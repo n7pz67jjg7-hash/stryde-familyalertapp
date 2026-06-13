@@ -204,6 +204,7 @@ export type Database = {
         }
         Returns: boolean
       }
+      link_caregiver_by_code: { Args: { _code: string }; Returns: string }
     }
     Enums: {
       app_role: "patient" | "caregiver"

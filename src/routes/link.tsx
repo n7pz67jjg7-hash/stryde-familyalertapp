@@ -144,15 +144,9 @@ function CaregiverLink() {
   const linkByCode = async (raw: string) => {
     if (!user) return;
     setBusy(true); setMsg(null);
-    const clean = raw.replace(/^STRYDE:/, "").trim().toUpperCase();
-    const { data: patient, error: pErr } = await supabase
-      .from("profiles").select("id").eq("patient_code", clean).maybeSingle();
-    if (pErr || !patient) { setMsg("Patient code not found."); setBusy(false); return; }
-    const { error } = await supabase
-      .from("caregiver_patient_links")
-      .insert({ caregiver_id: user.id, patient_id: patient.id });
+    const { error } = await supabase.rpc("link_caregiver_by_code", { _code: raw });
     setBusy(false);
-    if (error && !error.message.includes("duplicate")) { setMsg(error.message); return; }
+    if (error) { setMsg(error.message || "Unable to link"); return; }
     setMsg("Linked successfully ✓");
     setCode("");
     loadPatients();
