@@ -99,9 +99,19 @@ function PatientDashboard() {
             <div className="text-xs text-muted-foreground">{fall.fallDetected ? "Open emergency to confirm" : "All systems monitoring"}</div>
           </div>
           {fall.fallDetected && (
-            <Link to="/emergency" className="rounded-lg bg-destructive px-3 py-1.5 text-xs font-semibold text-destructive-foreground">Open</Link>
+            <Link to="/emergency" search={{ kind: "fall", risk }} className="rounded-lg bg-destructive px-3 py-1.5 text-xs font-semibold text-destructive-foreground">Open</Link>
           )}
         </div>
+
+        {/* Big SOS button */}
+        <Link
+          to="/emergency"
+          search={{ kind: "manual", risk }}
+          className="flex h-20 w-full items-center justify-center gap-3 rounded-2xl bg-destructive text-destructive-foreground shadow-elevated active:scale-[0.98]"
+        >
+          <AlertTriangle className="h-7 w-7" />
+          <span className="text-xl font-extrabold tracking-wide">SOS — Send Help</span>
+        </Link>
 
         {/* Quick actions */}
         <div className="grid grid-cols-2 gap-3">
