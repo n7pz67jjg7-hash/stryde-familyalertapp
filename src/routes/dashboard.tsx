@@ -60,6 +60,18 @@ function PatientDashboard() {
     if (risk >= 50) return { label: "Elevated", tone: "warning" as const };
     return { label: "Normal", tone: "success" as const };
   }, [risk]);
+  const riskExplain = risk >= 90
+    ? "Sudden free-fall followed by a sharp impact. Confirm you're okay."
+    : risk >= 50
+    ? "Unusual motion detected. We're watching closely."
+    : "Movement looks normal. We'll alert you if anything changes.";
+
+  // Auto-redirect to emergency on confirmed fall
+  useEffect(() => {
+    if (fall.fallDetected) {
+      navigate({ to: "/emergency", search: { kind: "fall", risk } });
+    }
+  }, [fall.fallDetected]); // eslint-disable-line
 
   return (
     <MobileShell>
