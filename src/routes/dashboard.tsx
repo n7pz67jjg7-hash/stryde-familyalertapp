@@ -168,6 +168,7 @@ function PatientDashboard() {
           <div className="mt-3 h-2 w-full overflow-hidden rounded-full bg-muted">
             <div className="h-full rounded-full bg-gradient-primary transition-all" style={{ width: `${risk}%` }} />
           </div>
+          <p className="mt-2 text-xs text-muted-foreground">{riskExplain}</p>
           {!sensorEnabled && (
             <button onClick={enableSensors} className="mt-3 w-full rounded-xl bg-primary py-2 text-sm font-semibold text-primary-foreground shadow-glow">
               Enable Motion Sensors
