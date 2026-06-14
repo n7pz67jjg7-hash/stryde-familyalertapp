@@ -1,5 +1,5 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { ArrowLeft, AlertCircle, MapPin, Phone } from "lucide-react";
+import { createFileRoute, useNavigate, useSearch } from "@tanstack/react-router";
+import { ArrowLeft, AlertCircle, MapPin, Phone, ShieldCheck, Timer } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { useDeviceStatus } from "@/hooks/useDeviceStatus";
 import { listContacts, type EmergencyContact } from "@/lib/contacts-store";
@@ -8,10 +8,14 @@ import { supabase } from "@/integrations/supabase/client";
 
 export const Route = createFileRoute("/emergency")({
   head: () => ({ meta: [{ title: "Emergency — STRYDE" }] }),
+  validateSearch: (s: Record<string, unknown>) => ({
+    kind: (s.kind as "manual" | "fall" | "auto") || "manual",
+    risk: typeof s.risk === "number" ? s.risk : Number(s.risk) || 0,
+  }),
   component: Emergency,
 });
 
-const COUNTDOWN_SECONDS = 5;
+const COUNTDOWN_SECONDS = 10;
 
 function Emergency() {
   const navigate = useNavigate();
