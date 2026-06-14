@@ -39,6 +39,7 @@ function Dashboard() {
 }
 
 function PatientDashboard() {
+  const navigate = useNavigate();
   const { battery, online, geo, motion, requestMotion, requestGeo } = useDeviceStatus();
   const { user, profile } = useAuth();
   const [sensorEnabled, setSensorEnabled] = useState(false);
