@@ -19,11 +19,16 @@ const COUNTDOWN_SECONDS = 10;
 
 function Emergency() {
   const navigate = useNavigate();
+  const search = useSearch({ from: "/emergency" });
   const { geo, requestGeo } = useDeviceStatus();
   const { user, profile } = useAuth();
   const [seconds, setSeconds] = useState(COUNTDOWN_SECONDS);
   const [sent, setSent] = useState(false);
   const [contacts, setContacts] = useState<EmergencyContact[]>([]);
+  const [eventId, setEventId] = useState<string | null>(null);
+  const [resolutionCode, setResolutionCode] = useState<string | null>(null);
+  const [resolved, setResolved] = useState(false);
+  const [elapsed, setElapsed] = useState(0);
   const audioRef = useRef<AudioContext | null>(null);
   const persisted = useRef(false);
 
@@ -53,40 +58,63 @@ function Emergency() {
     return () => { audioRef.current?.close().catch(() => {}); };
   }, []);
 
-  useEffect(() => {
-    if (sent || persisted.current) return;
-    if (seconds <= 0) {
-      persisted.current = true;
-      setSent(true);
-      if (user && profile) {
-        const snapshot = {
-          name: profile.full_name,
-          age: profile.age,
-          blood_type: profile.blood_type,
-          conditions: profile.medical_conditions,
-          medications: profile.medications,
-          emergency_contact_name: profile.emergency_contact_name,
-          emergency_contact_phone: profile.emergency_contact_phone,
-        };
-        supabase.from("emergency_events").insert({
-          patient_id: user.id,
-          lat: geo.coords?.lat ?? null,
-          lng: geo.coords?.lng ?? null,
-          snapshot,
-        }).then(() => {});
-      }
-      return;
-    }
-    const t = setTimeout(() => setSeconds((s) => s - 1), 1000);
-    return () => clearTimeout(t);
-  }, [seconds, sent, geo.coords, user, profile]);
-
-  const cancel = () => {
-    if ("vibrate" in navigator) navigator.vibrate(0);
-    navigate({ to: "/dashboard" });
+  const trigger = async () => {
+    if (persisted.current) return;
+    persisted.current = true;
+    setSent(true);
+    if (!user || !profile) return;
+    const snapshot = {
+      name: profile.full_name,
+      age: profile.age,
+      blood_type: profile.blood_type,
+      conditions: profile.medical_conditions,
+      medications: profile.medications,
+      emergency_contact_name: profile.emergency_contact_name,
+      emergency_contact_phone: profile.emergency_contact_phone,
+    };
+    const { data } = await supabase.from("emergency_events").insert({
+      patient_id: user.id,
+      lat: geo.coords?.lat ?? null,
+      lng: geo.coords?.lng ?? null,
+      snapshot,
+      kind: search.kind,
+      risk_score: Math.round(search.risk),
+    } as never).select("id, resolution_code").single();
+    const row = data as { id: string; resolution_code: string } | null;
+    if (row) { setEventId(row.id); setResolutionCode(row.resolution_code); }
   };
 
+  useEffect(() => {
+    if (sent || persisted.current) return;
+    if (seconds <= 0) { trigger(); return; }
+    const t = setTimeout(() => setSeconds((s) => s - 1), 1000);
+    return () => clearTimeout(t);
+  }, [seconds, sent]); // eslint-disable-line
+
+  // Elapsed timer while active
+  useEffect(() => {
+    if (!sent || resolved) return;
+    const id = setInterval(() => setElapsed((e) => e + 1), 1000);
+    return () => clearInterval(id);
+  }, [sent, resolved]);
+
+  const imSafe = async () => {
+    if (!sent) { navigate({ to: "/dashboard" }); return; }
+    if (!eventId || !user) return;
+    if (!confirm("Mark yourself as safe and close this alert?")) return;
+    await supabase.from("emergency_events").update({
+      resolved_at: new Date().toISOString(), resolved_by: user.id,
+    } as never).eq("id", eventId);
+    setResolved(true);
+    if ("vibrate" in navigator) navigator.vibrate(0);
+    setTimeout(() => navigate({ to: "/dashboard" }), 800);
+  };
+
+  const sendNow = () => { setSeconds(0); trigger(); };
+
   const priorityContact = contacts.find((c) => c.priority) ?? contacts[0];
+  const mm = String(Math.floor(elapsed / 60)).padStart(2, "0");
+  const ss = String(elapsed % 60).padStart(2, "0");
 
   return (
     <div className="mx-auto flex min-h-screen w-full max-w-md flex-col bg-background">
