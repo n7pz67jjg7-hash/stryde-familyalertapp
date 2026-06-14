@@ -19,6 +19,9 @@ interface AlertRow {
   snapshot: Record<string, unknown>;
   resolved_at: string | null;
   resolved_by: string | null;
+  resolution_code: string | null;
+  kind: string | null;
+  risk_score: number | null;
 }
 
 function Alerts() {
@@ -26,6 +29,8 @@ function Alerts() {
   const { user, loading } = useAuth();
   const [items, setItems] = useState<AlertRow[]>([]);
   const [verifying, setVerifying] = useState<string | null>(null);
+  const [codeInputs, setCodeInputs] = useState<Record<string, string>>({});
+  const [errors, setErrors] = useState<Record<string, string>>({});
 
   useEffect(() => { if (!loading && !user) navigate({ to: "/auth" }); }, [loading, user, navigate]);
 
@@ -57,14 +62,20 @@ function Alerts() {
     return () => { supabase.removeChannel(channel); };
   }, [user]);
 
-  const resolve = async (id: string) => {
+  const resolveWithCode = async (a: AlertRow) => {
     if (!user) return;
-    if (!confirm("Disable this emergency? Only do this after verifying the patient is safe.")) return;
-    setVerifying(id);
+    const entered = (codeInputs[a.id] || "").trim().toUpperCase();
+    if (entered.length !== 4) { setErrors((e) => ({ ...e, [a.id]: "Enter the 4-character code" })); return; }
+    if (a.resolution_code && entered !== a.resolution_code) {
+      setErrors((e) => ({ ...e, [a.id]: "Code does not match. Confirm with the patient." }));
+      return;
+    }
+    setErrors((e) => ({ ...e, [a.id]: "" }));
+    setVerifying(a.id);
     await supabase.from("emergency_events").update({
       resolved_at: new Date().toISOString(),
       resolved_by: user.id,
-    }).eq("id", id);
+    } as never).eq("id", a.id);
     setVerifying(null);
     load();
   };
@@ -121,10 +132,23 @@ function Alerts() {
                 )}
               </div>
               {!resolved && (
-                <button onClick={() => resolve(a.id)} disabled={verifying === a.id}
-                  className="mt-3 h-11 w-full rounded-xl bg-success text-sm font-semibold text-success-foreground disabled:opacity-60">
-                  {verifying === a.id ? "Verifying…" : "Disable after verification"}
-                </button>
+                <div className="mt-3 rounded-xl bg-muted/40 p-3">
+                  <p className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">Disable after verification</p>
+                  <p className="mt-0.5 text-[11px] text-muted-foreground">Ask the patient for the 4-character code shown on their screen.</p>
+                  <div className="mt-2 flex gap-2">
+                    <input
+                      value={codeInputs[a.id] || ""}
+                      onChange={(e) => setCodeInputs((c) => ({ ...c, [a.id]: e.target.value.toUpperCase().slice(0, 4) }))}
+                      placeholder="ABCD" maxLength={4}
+                      className="flex-1 rounded-lg border border-border bg-background px-3 py-2 text-center text-base font-bold tracking-[0.4em] uppercase outline-none focus:ring-2 focus:ring-ring"
+                    />
+                    <button onClick={() => resolveWithCode(a)} disabled={verifying === a.id}
+                      className="rounded-lg bg-success px-4 text-xs font-semibold text-success-foreground disabled:opacity-60">
+                      {verifying === a.id ? "…" : "Verify"}
+                    </button>
+                  </div>
+                  {errors[a.id] && <p className="mt-1 text-[11px] text-destructive">{errors[a.id]}</p>}
+                </div>
               )}
               {resolved && (
                 <p className="mt-3 text-center text-xs text-success">Resolved {new Date(a.resolved_at!).toLocaleString()}</p>

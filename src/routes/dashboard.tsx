@@ -39,6 +39,7 @@ function Dashboard() {
 }
 
 function PatientDashboard() {
+  const navigate = useNavigate();
   const { battery, online, geo, motion, requestMotion, requestGeo } = useDeviceStatus();
   const { user, profile } = useAuth();
   const [sensorEnabled, setSensorEnabled] = useState(false);
@@ -60,6 +61,18 @@ function PatientDashboard() {
     if (risk >= 50) return { label: "Elevated", tone: "warning" as const };
     return { label: "Normal", tone: "success" as const };
   }, [risk]);
+  const riskExplain = risk >= 90
+    ? "Sudden free-fall followed by a sharp impact. Confirm you're okay."
+    : risk >= 50
+    ? "Unusual motion detected. We're watching closely."
+    : "Movement looks normal. We'll alert you if anything changes.";
+
+  // Auto-redirect to emergency on confirmed fall
+  useEffect(() => {
+    if (fall.fallDetected) {
+      navigate({ to: "/emergency", search: { kind: "fall", risk } });
+    }
+  }, [fall.fallDetected]); // eslint-disable-line
 
   return (
     <MobileShell>
@@ -99,9 +112,19 @@ function PatientDashboard() {
             <div className="text-xs text-muted-foreground">{fall.fallDetected ? "Open emergency to confirm" : "All systems monitoring"}</div>
           </div>
           {fall.fallDetected && (
-            <Link to="/emergency" className="rounded-lg bg-destructive px-3 py-1.5 text-xs font-semibold text-destructive-foreground">Open</Link>
+            <Link to="/emergency" search={{ kind: "fall", risk }} className="rounded-lg bg-destructive px-3 py-1.5 text-xs font-semibold text-destructive-foreground">Open</Link>
           )}
         </div>
+
+        {/* Big SOS button */}
+        <Link
+          to="/emergency"
+          search={{ kind: "manual", risk }}
+          className="flex h-20 w-full items-center justify-center gap-3 rounded-2xl bg-destructive text-destructive-foreground shadow-elevated active:scale-[0.98]"
+        >
+          <AlertTriangle className="h-7 w-7" />
+          <span className="text-xl font-extrabold tracking-wide">SOS — Send Help</span>
+        </Link>
 
         {/* Quick actions */}
         <div className="grid grid-cols-2 gap-3">
@@ -145,6 +168,7 @@ function PatientDashboard() {
           <div className="mt-3 h-2 w-full overflow-hidden rounded-full bg-muted">
             <div className="h-full rounded-full bg-gradient-primary transition-all" style={{ width: `${risk}%` }} />
           </div>
+          <p className="mt-2 text-xs text-muted-foreground">{riskExplain}</p>
           {!sensorEnabled && (
             <button onClick={enableSensors} className="mt-3 w-full rounded-xl bg-primary py-2 text-sm font-semibold text-primary-foreground shadow-glow">
               Enable Motion Sensors

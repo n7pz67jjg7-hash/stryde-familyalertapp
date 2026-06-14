@@ -71,31 +71,40 @@ export type Database = {
       emergency_events: {
         Row: {
           id: string
+          kind: string
           lat: number | null
           lng: number | null
           patient_id: string
+          resolution_code: string | null
           resolved_at: string | null
           resolved_by: string | null
+          risk_score: number | null
           snapshot: Json
           triggered_at: string
         }
         Insert: {
           id?: string
+          kind?: string
           lat?: number | null
           lng?: number | null
           patient_id: string
+          resolution_code?: string | null
           resolved_at?: string | null
           resolved_by?: string | null
+          risk_score?: number | null
           snapshot?: Json
           triggered_at?: string
         }
         Update: {
           id?: string
+          kind?: string
           lat?: number | null
           lng?: number | null
           patient_id?: string
+          resolution_code?: string | null
           resolved_at?: string | null
           resolved_by?: string | null
+          risk_score?: number | null
           snapshot?: Json
           triggered_at?: string
         }
