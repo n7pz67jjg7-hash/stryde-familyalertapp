@@ -19,6 +19,9 @@ interface AlertRow {
   snapshot: Record<string, unknown>;
   resolved_at: string | null;
   resolved_by: string | null;
+  resolution_code: string | null;
+  kind: string | null;
+  risk_score: number | null;
 }
 
 function Alerts() {
@@ -26,6 +29,8 @@ function Alerts() {
   const { user, loading } = useAuth();
   const [items, setItems] = useState<AlertRow[]>([]);
   const [verifying, setVerifying] = useState<string | null>(null);
+  const [codeInputs, setCodeInputs] = useState<Record<string, string>>({});
+  const [errors, setErrors] = useState<Record<string, string>>({});
 
   useEffect(() => { if (!loading && !user) navigate({ to: "/auth" }); }, [loading, user, navigate]);
 
@@ -57,14 +62,20 @@ function Alerts() {
     return () => { supabase.removeChannel(channel); };
   }, [user]);
 
-  const resolve = async (id: string) => {
+  const resolveWithCode = async (a: AlertRow) => {
     if (!user) return;
-    if (!confirm("Disable this emergency? Only do this after verifying the patient is safe.")) return;
-    setVerifying(id);
+    const entered = (codeInputs[a.id] || "").trim().toUpperCase();
+    if (entered.length !== 4) { setErrors((e) => ({ ...e, [a.id]: "Enter the 4-character code" })); return; }
+    if (a.resolution_code && entered !== a.resolution_code) {
+      setErrors((e) => ({ ...e, [a.id]: "Code does not match. Confirm with the patient." }));
+      return;
+    }
+    setErrors((e) => ({ ...e, [a.id]: "" }));
+    setVerifying(a.id);
     await supabase.from("emergency_events").update({
       resolved_at: new Date().toISOString(),
       resolved_by: user.id,
-    }).eq("id", id);
+    } as never).eq("id", a.id);
     setVerifying(null);
     load();
   };
