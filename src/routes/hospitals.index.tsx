@@ -8,7 +8,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { toast } from "sonner";
 
-export const Route = createFileRoute("/hospitals")({
+export const Route = createFileRoute("/hospitals/")({
   head: () => ({
     meta: [
       { title: "Egypt Hospital Directory — STRYDE" },
