@@ -39,6 +39,7 @@ export function MobileShell({
       {sosVisible && (
         <Link
           to="/emergency"
+          search={{ kind: "manual" as const, risk: 0 }}
           aria-label="Trigger SOS"
           className="fixed bottom-24 right-4 z-30 flex h-16 w-16 items-center justify-center rounded-full bg-destructive text-destructive-foreground shadow-elevated transition-transform active:scale-95"
           style={{ boxShadow: "0 14px 40px -10px oklch(0.6 0.22 25 / 0.55)" }}
