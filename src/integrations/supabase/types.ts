@@ -14,6 +14,72 @@ export type Database = {
   }
   public: {
     Tables: {
+      appointments: {
+        Row: {
+          created_at: string
+          doctor_name: string
+          hospital_name: string | null
+          id: string
+          notes: string | null
+          patient_id: string
+          scheduled_at: string
+          specialty: string | null
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          doctor_name: string
+          hospital_name?: string | null
+          id?: string
+          notes?: string | null
+          patient_id: string
+          scheduled_at: string
+          specialty?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          doctor_name?: string
+          hospital_name?: string | null
+          id?: string
+          notes?: string | null
+          patient_id?: string
+          scheduled_at?: string
+          specialty?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      care_messages: {
+        Row: {
+          body: string
+          created_at: string
+          id: string
+          read_at: string | null
+          recipient_id: string
+          sender_id: string
+        }
+        Insert: {
+          body: string
+          created_at?: string
+          id?: string
+          read_at?: string | null
+          recipient_id: string
+          sender_id: string
+        }
+        Update: {
+          body?: string
+          created_at?: string
+          id?: string
+          read_at?: string | null
+          recipient_id?: string
+          sender_id?: string
+        }
+        Relationships: []
+      }
       caregiver_patient_links: {
         Row: {
           caregiver_id: string
@@ -32,6 +98,30 @@ export type Database = {
           created_at?: string
           id?: string
           patient_id?: string
+        }
+        Relationships: []
+      }
+      check_ins: {
+        Row: {
+          created_at: string
+          id: string
+          note: string | null
+          patient_id: string
+          status: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          note?: string | null
+          patient_id: string
+          status?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          note?: string | null
+          patient_id?: string
+          status?: string
         }
         Relationships: []
       }
@@ -107,6 +197,173 @@ export type Database = {
           risk_score?: number | null
           snapshot?: Json
           triggered_at?: string
+        }
+        Relationships: []
+      }
+      hospital_favorites: {
+        Row: {
+          address: string | null
+          created_at: string
+          id: string
+          place_id: string
+          place_name: string
+          user_id: string
+        }
+        Insert: {
+          address?: string | null
+          created_at?: string
+          id?: string
+          place_id: string
+          place_name?: string
+          user_id: string
+        }
+        Update: {
+          address?: string | null
+          created_at?: string
+          id?: string
+          place_id?: string
+          place_name?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      hospital_reviews: {
+        Row: {
+          comment: string | null
+          created_at: string
+          id: string
+          place_id: string
+          place_name: string
+          rating: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          comment?: string | null
+          created_at?: string
+          id?: string
+          place_id: string
+          place_name?: string
+          rating: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          comment?: string | null
+          created_at?: string
+          id?: string
+          place_id?: string
+          place_name?: string
+          rating?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      incident_reports: {
+        Row: {
+          created_at: string
+          created_by: string
+          description: string | null
+          event_id: string | null
+          id: string
+          patient_id: string
+          severity: string
+          title: string
+        }
+        Insert: {
+          created_at?: string
+          created_by: string
+          description?: string | null
+          event_id?: string | null
+          id?: string
+          patient_id: string
+          severity?: string
+          title: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string
+          description?: string | null
+          event_id?: string | null
+          id?: string
+          patient_id?: string
+          severity?: string
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "incident_reports_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "emergency_events"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      invoices: {
+        Row: {
+          amount_egp: number
+          created_at: string
+          description: string
+          id: string
+          issued_at: string
+          status: string
+          user_id: string
+        }
+        Insert: {
+          amount_egp?: number
+          created_at?: string
+          description: string
+          id?: string
+          issued_at?: string
+          status?: string
+          user_id: string
+        }
+        Update: {
+          amount_egp?: number
+          created_at?: string
+          description?: string
+          id?: string
+          issued_at?: string
+          status?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      lab_results: {
+        Row: {
+          created_at: string
+          id: string
+          lab_name: string | null
+          patient_id: string
+          reference_range: string | null
+          result: string
+          taken_at: string
+          test_name: string
+          unit: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          lab_name?: string | null
+          patient_id: string
+          reference_range?: string | null
+          result: string
+          taken_at?: string
+          test_name: string
+          unit?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          lab_name?: string | null
+          patient_id?: string
+          reference_range?: string | null
+          result?: string
+          taken_at?: string
+          test_name?: string
+          unit?: string | null
         }
         Relationships: []
       }
@@ -286,6 +543,72 @@ export type Database = {
         }
         Relationships: []
       }
+      safe_zones: {
+        Row: {
+          active: boolean
+          created_at: string
+          id: string
+          lat: number
+          lng: number
+          name: string
+          patient_id: string
+          radius_m: number
+          updated_at: string
+        }
+        Insert: {
+          active?: boolean
+          created_at?: string
+          id?: string
+          lat: number
+          lng: number
+          name: string
+          patient_id: string
+          radius_m?: number
+          updated_at?: string
+        }
+        Update: {
+          active?: boolean
+          created_at?: string
+          id?: string
+          lat?: number
+          lng?: number
+          name?: string
+          patient_id?: string
+          radius_m?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      support_tickets: {
+        Row: {
+          body: string
+          created_at: string
+          id: string
+          status: string
+          subject: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          body: string
+          created_at?: string
+          id?: string
+          status?: string
+          subject: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          body?: string
+          created_at?: string
+          id?: string
+          status?: string
+          subject?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           created_at: string
@@ -304,6 +627,42 @@ export type Database = {
           id?: string
           role?: Database["public"]["Enums"]["app_role"]
           user_id?: string
+        }
+        Relationships: []
+      }
+      vitals: {
+        Row: {
+          created_at: string
+          id: string
+          kind: string
+          note: string | null
+          patient_id: string
+          recorded_at: string
+          unit: string | null
+          value: number
+          value2: number | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          kind: string
+          note?: string | null
+          patient_id: string
+          recorded_at?: string
+          unit?: string | null
+          value: number
+          value2?: number | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          kind?: string
+          note?: string | null
+          patient_id?: string
+          recorded_at?: string
+          unit?: string | null
+          value?: number
+          value2?: number | null
         }
         Relationships: []
       }
