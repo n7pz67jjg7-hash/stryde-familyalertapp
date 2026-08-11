@@ -17,6 +17,7 @@ import { Route as PlansRouteImport } from './routes/plans'
 import { Route as OnboardingRouteImport } from './routes/onboarding'
 import { Route as NotificationsRouteImport } from './routes/notifications'
 import { Route as NearestErRouteImport } from './routes/nearest-er'
+import { Route as MoreRouteImport } from './routes/more'
 import { Route as MessagesRouteImport } from './routes/messages'
 import { Route as MedicationsRouteImport } from './routes/medications'
 import { Route as MedicalProfileRouteImport } from './routes/medical-profile'
@@ -81,6 +82,11 @@ const NotificationsRoute = NotificationsRouteImport.update({
 const NearestErRoute = NearestErRouteImport.update({
   id: '/nearest-er',
   path: '/nearest-er',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MoreRoute = MoreRouteImport.update({
+  id: '/more',
+  path: '/more',
   getParentRoute: () => rootRouteImport,
 } as any)
 const MessagesRoute = MessagesRouteImport.update({
@@ -227,6 +233,7 @@ export interface FileRoutesByFullPath {
   '/medical-profile': typeof MedicalProfileRoute
   '/medications': typeof MedicationsRoute
   '/messages': typeof MessagesRoute
+  '/more': typeof MoreRoute
   '/nearest-er': typeof NearestErRoute
   '/notifications': typeof NotificationsRoute
   '/onboarding': typeof OnboardingRoute
@@ -262,6 +269,7 @@ export interface FileRoutesByTo {
   '/medical-profile': typeof MedicalProfileRoute
   '/medications': typeof MedicationsRoute
   '/messages': typeof MessagesRoute
+  '/more': typeof MoreRoute
   '/nearest-er': typeof NearestErRoute
   '/notifications': typeof NotificationsRoute
   '/onboarding': typeof OnboardingRoute
@@ -298,6 +306,7 @@ export interface FileRoutesById {
   '/medical-profile': typeof MedicalProfileRoute
   '/medications': typeof MedicationsRoute
   '/messages': typeof MessagesRoute
+  '/more': typeof MoreRoute
   '/nearest-er': typeof NearestErRoute
   '/notifications': typeof NotificationsRoute
   '/onboarding': typeof OnboardingRoute
@@ -335,6 +344,7 @@ export interface FileRouteTypes {
     | '/medical-profile'
     | '/medications'
     | '/messages'
+    | '/more'
     | '/nearest-er'
     | '/notifications'
     | '/onboarding'
@@ -370,6 +380,7 @@ export interface FileRouteTypes {
     | '/medical-profile'
     | '/medications'
     | '/messages'
+    | '/more'
     | '/nearest-er'
     | '/notifications'
     | '/onboarding'
@@ -405,6 +416,7 @@ export interface FileRouteTypes {
     | '/medical-profile'
     | '/medications'
     | '/messages'
+    | '/more'
     | '/nearest-er'
     | '/notifications'
     | '/onboarding'
@@ -441,6 +453,7 @@ export interface RootRouteChildren {
   MedicalProfileRoute: typeof MedicalProfileRoute
   MedicationsRoute: typeof MedicationsRoute
   MessagesRoute: typeof MessagesRoute
+  MoreRoute: typeof MoreRoute
   NearestErRoute: typeof NearestErRoute
   NotificationsRoute: typeof NotificationsRoute
   OnboardingRoute: typeof OnboardingRoute
@@ -515,6 +528,13 @@ declare module '@tanstack/react-router' {
       path: '/nearest-er'
       fullPath: '/nearest-er'
       preLoaderRoute: typeof NearestErRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/more': {
+      id: '/more'
+      path: '/more'
+      fullPath: '/more'
+      preLoaderRoute: typeof MoreRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/messages': {
@@ -713,6 +733,7 @@ const rootRouteChildren: RootRouteChildren = {
   MedicalProfileRoute: MedicalProfileRoute,
   MedicationsRoute: MedicationsRoute,
   MessagesRoute: MessagesRoute,
+  MoreRoute: MoreRoute,
   NearestErRoute: NearestErRoute,
   NotificationsRoute: NotificationsRoute,
   OnboardingRoute: OnboardingRoute,

@@ -1,5 +1,5 @@
 import { Link, useRouterState } from "@tanstack/react-router";
-import { Home, Users, Settings, ShieldAlert, Bell, QrCode, Pill } from "lucide-react";
+import { Home, Grid3x3, Settings, ShieldAlert, Bell, QrCode, Pill } from "lucide-react";
 import type { ReactNode } from "react";
 import { useAuth } from "@/hooks/useAuth";
 
@@ -9,7 +9,7 @@ const PATIENT_TABS: Tab[] = [
   { to: "/dashboard", label: "Home", icon: Home },
   { to: "/medications", label: "Meds", icon: Pill },
   { to: "/link", label: "Family", icon: QrCode },
-  { to: "/contacts", label: "Contacts", icon: Users },
+  { to: "/more", label: "More", icon: Grid3x3 },
   { to: "/settings", label: "Settings", icon: Settings },
 ];
 
@@ -17,6 +17,7 @@ const CAREGIVER_TABS: Tab[] = [
   { to: "/dashboard", label: "Home", icon: Home },
   { to: "/alerts", label: "Alerts", icon: Bell },
   { to: "/link", label: "Patients", icon: QrCode },
+  { to: "/more", label: "More", icon: Grid3x3 },
   { to: "/settings", label: "Settings", icon: Settings },
 ];
 
