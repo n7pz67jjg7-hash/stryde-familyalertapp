@@ -38,17 +38,17 @@ function NearestER() {
   const [err, setErr] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!geo?.lat || !geo?.lng || list.length) return;
+    if (!geo.coords?.lat || !geo.coords?.lng || list.length) return;
     setLoading(true);
-    nearby({ data: { lat: geo.lat, lng: geo.lng } })
+    nearby({ data: { lat: geo.coords!.lat, lng: geo.coords!.lng } })
       .then((r) => setList(r.hospitals))
       .catch((e) => setErr(e instanceof Error ? e.message : "Could not load nearby hospitals"))
       .finally(() => setLoading(false));
-  }, [geo?.lat, geo?.lng, list.length, nearby]);
+  }, [geo.coords?.lat, geo.coords?.lng, list.length, nearby]);
 
   return (
     <Screen title="Nearest emergency room" subtitle="Sorted by distance from you">
-      {!geo?.lat && (
+      {!geo.coords?.lat && (
         <Card className="space-y-3 text-sm">
           <p>Allow location access to find the closest emergency rooms.</p>
           <button
@@ -66,7 +66,7 @@ function NearestER() {
       )}
       {err && <Empty text={err} />}
       {list.map((h) => {
-        const km = geo?.lat && geo?.lng ? distanceKm([geo.lat, geo.lng], [h.lat, h.lng]) : null;
+        const km = geo.coords?.lat && geo.coords?.lng ? distanceKm([geo.coords!.lat, geo.coords!.lng], [h.lat, h.lng]) : null;
         return (
           <Card key={h.id} className="space-y-2">
             <div className="flex items-start justify-between gap-2">

@@ -28,7 +28,7 @@ const NUMBERS = [
 function AmbulancePage() {
   const { geo } = useDeviceStatus();
   const { profile } = useAuth();
-  const coords = geo?.lat ? `${geo.lat.toFixed(5)}, ${geo.lng?.toFixed(5)}` : "Locating…";
+  const coords = geo.coords?.lat ? `${geo.coords!.lat.toFixed(5)}, ${geo.coords!.lng?.toFixed(5)}` : "Locating…";
 
   return (
     <Screen title="Ambulance & hotlines" subtitle="Egypt emergency numbers">
