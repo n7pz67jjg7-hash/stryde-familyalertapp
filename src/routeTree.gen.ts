@@ -20,7 +20,6 @@ import { Route as MedicalProfileRouteImport } from './routes/medical-profile'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as LocationRouteImport } from './routes/location'
 import { Route as LinkRouteImport } from './routes/link'
-import { Route as HospitalsRouteImport } from './routes/hospitals'
 import { Route as HistoryRouteImport } from './routes/history'
 import { Route as EmergencyRouteImport } from './routes/emergency'
 import { Route as DashboardRouteImport } from './routes/dashboard'
@@ -28,6 +27,7 @@ import { Route as ContactsRouteImport } from './routes/contacts'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AlertsRouteImport } from './routes/alerts'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as HospitalsIndexRouteImport } from './routes/hospitals.index'
 import { Route as HospitalsPlaceIdRouteImport } from './routes/hospitals.$placeId'
 
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
@@ -85,11 +85,6 @@ const LinkRoute = LinkRouteImport.update({
   path: '/link',
   getParentRoute: () => rootRouteImport,
 } as any)
-const HospitalsRoute = HospitalsRouteImport.update({
-  id: '/hospitals',
-  path: '/hospitals',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const HistoryRoute = HistoryRouteImport.update({
   id: '/history',
   path: '/history',
@@ -125,10 +120,15 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const HospitalsIndexRoute = HospitalsIndexRouteImport.update({
+  id: '/hospitals/',
+  path: '/hospitals/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const HospitalsPlaceIdRoute = HospitalsPlaceIdRouteImport.update({
-  id: '/$placeId',
-  path: '/$placeId',
-  getParentRoute: () => HospitalsRoute,
+  id: '/hospitals/$placeId',
+  path: '/hospitals/$placeId',
+  getParentRoute: () => rootRouteImport,
 } as any)
 
 export interface FileRoutesByFullPath {
@@ -139,7 +139,6 @@ export interface FileRoutesByFullPath {
   '/dashboard': typeof DashboardRoute
   '/emergency': typeof EmergencyRoute
   '/history': typeof HistoryRoute
-  '/hospitals': typeof HospitalsRouteWithChildren
   '/link': typeof LinkRoute
   '/location': typeof LocationRoute
   '/login': typeof LoginRoute
@@ -152,6 +151,7 @@ export interface FileRoutesByFullPath {
   '/settings': typeof SettingsRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/hospitals/$placeId': typeof HospitalsPlaceIdRoute
+  '/hospitals/': typeof HospitalsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -161,7 +161,6 @@ export interface FileRoutesByTo {
   '/dashboard': typeof DashboardRoute
   '/emergency': typeof EmergencyRoute
   '/history': typeof HistoryRoute
-  '/hospitals': typeof HospitalsRouteWithChildren
   '/link': typeof LinkRoute
   '/location': typeof LocationRoute
   '/login': typeof LoginRoute
@@ -174,6 +173,7 @@ export interface FileRoutesByTo {
   '/settings': typeof SettingsRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/hospitals/$placeId': typeof HospitalsPlaceIdRoute
+  '/hospitals': typeof HospitalsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -184,7 +184,6 @@ export interface FileRoutesById {
   '/dashboard': typeof DashboardRoute
   '/emergency': typeof EmergencyRoute
   '/history': typeof HistoryRoute
-  '/hospitals': typeof HospitalsRouteWithChildren
   '/link': typeof LinkRoute
   '/location': typeof LocationRoute
   '/login': typeof LoginRoute
@@ -197,6 +196,7 @@ export interface FileRoutesById {
   '/settings': typeof SettingsRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/hospitals/$placeId': typeof HospitalsPlaceIdRoute
+  '/hospitals/': typeof HospitalsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -208,7 +208,6 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/emergency'
     | '/history'
-    | '/hospitals'
     | '/link'
     | '/location'
     | '/login'
@@ -221,6 +220,7 @@ export interface FileRouteTypes {
     | '/settings'
     | '/sitemap.xml'
     | '/hospitals/$placeId'
+    | '/hospitals/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -230,7 +230,6 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/emergency'
     | '/history'
-    | '/hospitals'
     | '/link'
     | '/location'
     | '/login'
@@ -243,6 +242,7 @@ export interface FileRouteTypes {
     | '/settings'
     | '/sitemap.xml'
     | '/hospitals/$placeId'
+    | '/hospitals'
   id:
     | '__root__'
     | '/'
@@ -252,7 +252,6 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/emergency'
     | '/history'
-    | '/hospitals'
     | '/link'
     | '/location'
     | '/login'
@@ -265,6 +264,7 @@ export interface FileRouteTypes {
     | '/settings'
     | '/sitemap.xml'
     | '/hospitals/$placeId'
+    | '/hospitals/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -275,7 +275,6 @@ export interface RootRouteChildren {
   DashboardRoute: typeof DashboardRoute
   EmergencyRoute: typeof EmergencyRoute
   HistoryRoute: typeof HistoryRoute
-  HospitalsRoute: typeof HospitalsRouteWithChildren
   LinkRoute: typeof LinkRoute
   LocationRoute: typeof LocationRoute
   LoginRoute: typeof LoginRoute
@@ -287,6 +286,8 @@ export interface RootRouteChildren {
   RegisterRoute: typeof RegisterRoute
   SettingsRoute: typeof SettingsRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
+  HospitalsPlaceIdRoute: typeof HospitalsPlaceIdRoute
+  HospitalsIndexRoute: typeof HospitalsIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -368,13 +369,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LinkRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/hospitals': {
-      id: '/hospitals'
-      path: '/hospitals'
-      fullPath: '/hospitals'
-      preLoaderRoute: typeof HospitalsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/history': {
       id: '/history'
       path: '/history'
@@ -424,27 +418,22 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/hospitals/': {
+      id: '/hospitals/'
+      path: '/hospitals'
+      fullPath: '/hospitals/'
+      preLoaderRoute: typeof HospitalsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/hospitals/$placeId': {
       id: '/hospitals/$placeId'
-      path: '/$placeId'
+      path: '/hospitals/$placeId'
       fullPath: '/hospitals/$placeId'
       preLoaderRoute: typeof HospitalsPlaceIdRouteImport
-      parentRoute: typeof HospitalsRoute
+      parentRoute: typeof rootRouteImport
     }
   }
 }
-
-interface HospitalsRouteChildren {
-  HospitalsPlaceIdRoute: typeof HospitalsPlaceIdRoute
-}
-
-const HospitalsRouteChildren: HospitalsRouteChildren = {
-  HospitalsPlaceIdRoute: HospitalsPlaceIdRoute,
-}
-
-const HospitalsRouteWithChildren = HospitalsRoute._addFileChildren(
-  HospitalsRouteChildren,
-)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
@@ -454,7 +443,6 @@ const rootRouteChildren: RootRouteChildren = {
   DashboardRoute: DashboardRoute,
   EmergencyRoute: EmergencyRoute,
   HistoryRoute: HistoryRoute,
-  HospitalsRoute: HospitalsRouteWithChildren,
   LinkRoute: LinkRoute,
   LocationRoute: LocationRoute,
   LoginRoute: LoginRoute,
@@ -466,6 +454,8 @@ const rootRouteChildren: RootRouteChildren = {
   RegisterRoute: RegisterRoute,
   SettingsRoute: SettingsRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
+  HospitalsPlaceIdRoute: HospitalsPlaceIdRoute,
+  HospitalsIndexRoute: HospitalsIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
