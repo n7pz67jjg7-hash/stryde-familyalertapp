@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Screen, Card } from "@/components/Screen";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
-import { VITAL_KINDS } from "./vitals.index";
+import { VITAL_KINDS } from "@/lib/vitals";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/vitals/log")({

@@ -11,11 +11,13 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as SettingsRouteImport } from './routes/settings'
+import { Route as SafeZonesRouteImport } from './routes/safe-zones'
 import { Route as RegisterRouteImport } from './routes/register'
 import { Route as PlansRouteImport } from './routes/plans'
 import { Route as OnboardingRouteImport } from './routes/onboarding'
 import { Route as NotificationsRouteImport } from './routes/notifications'
 import { Route as NearestErRouteImport } from './routes/nearest-er'
+import { Route as MessagesRouteImport } from './routes/messages'
 import { Route as MedicationsRouteImport } from './routes/medications'
 import { Route as MedicalProfileRouteImport } from './routes/medical-profile'
 import { Route as LoginRouteImport } from './routes/login'
@@ -23,6 +25,7 @@ import { Route as LocationRouteImport } from './routes/location'
 import { Route as LinkRouteImport } from './routes/link'
 import { Route as LabResultsRouteImport } from './routes/lab-results'
 import { Route as HistoryRouteImport } from './routes/history'
+import { Route as FamilyRouteImport } from './routes/family'
 import { Route as EmergencyRouteImport } from './routes/emergency'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as ContactsRouteImport } from './routes/contacts'
@@ -50,6 +53,11 @@ const SettingsRoute = SettingsRouteImport.update({
   path: '/settings',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SafeZonesRoute = SafeZonesRouteImport.update({
+  id: '/safe-zones',
+  path: '/safe-zones',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const RegisterRoute = RegisterRouteImport.update({
   id: '/register',
   path: '/register',
@@ -73,6 +81,11 @@ const NotificationsRoute = NotificationsRouteImport.update({
 const NearestErRoute = NearestErRouteImport.update({
   id: '/nearest-er',
   path: '/nearest-er',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MessagesRoute = MessagesRouteImport.update({
+  id: '/messages',
+  path: '/messages',
   getParentRoute: () => rootRouteImport,
 } as any)
 const MedicationsRoute = MedicationsRouteImport.update({
@@ -108,6 +121,11 @@ const LabResultsRoute = LabResultsRouteImport.update({
 const HistoryRoute = HistoryRouteImport.update({
   id: '/history',
   path: '/history',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FamilyRoute = FamilyRouteImport.update({
+  id: '/family',
+  path: '/family',
   getParentRoute: () => rootRouteImport,
 } as any)
 const EmergencyRoute = EmergencyRouteImport.update({
@@ -200,6 +218,7 @@ export interface FileRoutesByFullPath {
   '/contacts': typeof ContactsRoute
   '/dashboard': typeof DashboardRoute
   '/emergency': typeof EmergencyRoute
+  '/family': typeof FamilyRoute
   '/history': typeof HistoryRoute
   '/lab-results': typeof LabResultsRoute
   '/link': typeof LinkRoute
@@ -207,11 +226,13 @@ export interface FileRoutesByFullPath {
   '/login': typeof LoginRoute
   '/medical-profile': typeof MedicalProfileRoute
   '/medications': typeof MedicationsRoute
+  '/messages': typeof MessagesRoute
   '/nearest-er': typeof NearestErRoute
   '/notifications': typeof NotificationsRoute
   '/onboarding': typeof OnboardingRoute
   '/plans': typeof PlansRoute
   '/register': typeof RegisterRoute
+  '/safe-zones': typeof SafeZonesRoute
   '/settings': typeof SettingsRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/appointments/new': typeof AppointmentsNewRoute
@@ -232,6 +253,7 @@ export interface FileRoutesByTo {
   '/contacts': typeof ContactsRoute
   '/dashboard': typeof DashboardRoute
   '/emergency': typeof EmergencyRoute
+  '/family': typeof FamilyRoute
   '/history': typeof HistoryRoute
   '/lab-results': typeof LabResultsRoute
   '/link': typeof LinkRoute
@@ -239,11 +261,13 @@ export interface FileRoutesByTo {
   '/login': typeof LoginRoute
   '/medical-profile': typeof MedicalProfileRoute
   '/medications': typeof MedicationsRoute
+  '/messages': typeof MessagesRoute
   '/nearest-er': typeof NearestErRoute
   '/notifications': typeof NotificationsRoute
   '/onboarding': typeof OnboardingRoute
   '/plans': typeof PlansRoute
   '/register': typeof RegisterRoute
+  '/safe-zones': typeof SafeZonesRoute
   '/settings': typeof SettingsRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/appointments/new': typeof AppointmentsNewRoute
@@ -265,6 +289,7 @@ export interface FileRoutesById {
   '/contacts': typeof ContactsRoute
   '/dashboard': typeof DashboardRoute
   '/emergency': typeof EmergencyRoute
+  '/family': typeof FamilyRoute
   '/history': typeof HistoryRoute
   '/lab-results': typeof LabResultsRoute
   '/link': typeof LinkRoute
@@ -272,11 +297,13 @@ export interface FileRoutesById {
   '/login': typeof LoginRoute
   '/medical-profile': typeof MedicalProfileRoute
   '/medications': typeof MedicationsRoute
+  '/messages': typeof MessagesRoute
   '/nearest-er': typeof NearestErRoute
   '/notifications': typeof NotificationsRoute
   '/onboarding': typeof OnboardingRoute
   '/plans': typeof PlansRoute
   '/register': typeof RegisterRoute
+  '/safe-zones': typeof SafeZonesRoute
   '/settings': typeof SettingsRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/appointments/new': typeof AppointmentsNewRoute
@@ -299,6 +326,7 @@ export interface FileRouteTypes {
     | '/contacts'
     | '/dashboard'
     | '/emergency'
+    | '/family'
     | '/history'
     | '/lab-results'
     | '/link'
@@ -306,11 +334,13 @@ export interface FileRouteTypes {
     | '/login'
     | '/medical-profile'
     | '/medications'
+    | '/messages'
     | '/nearest-er'
     | '/notifications'
     | '/onboarding'
     | '/plans'
     | '/register'
+    | '/safe-zones'
     | '/settings'
     | '/sitemap.xml'
     | '/appointments/new'
@@ -331,6 +361,7 @@ export interface FileRouteTypes {
     | '/contacts'
     | '/dashboard'
     | '/emergency'
+    | '/family'
     | '/history'
     | '/lab-results'
     | '/link'
@@ -338,11 +369,13 @@ export interface FileRouteTypes {
     | '/login'
     | '/medical-profile'
     | '/medications'
+    | '/messages'
     | '/nearest-er'
     | '/notifications'
     | '/onboarding'
     | '/plans'
     | '/register'
+    | '/safe-zones'
     | '/settings'
     | '/sitemap.xml'
     | '/appointments/new'
@@ -363,6 +396,7 @@ export interface FileRouteTypes {
     | '/contacts'
     | '/dashboard'
     | '/emergency'
+    | '/family'
     | '/history'
     | '/lab-results'
     | '/link'
@@ -370,11 +404,13 @@ export interface FileRouteTypes {
     | '/login'
     | '/medical-profile'
     | '/medications'
+    | '/messages'
     | '/nearest-er'
     | '/notifications'
     | '/onboarding'
     | '/plans'
     | '/register'
+    | '/safe-zones'
     | '/settings'
     | '/sitemap.xml'
     | '/appointments/new'
@@ -396,6 +432,7 @@ export interface RootRouteChildren {
   ContactsRoute: typeof ContactsRoute
   DashboardRoute: typeof DashboardRoute
   EmergencyRoute: typeof EmergencyRoute
+  FamilyRoute: typeof FamilyRoute
   HistoryRoute: typeof HistoryRoute
   LabResultsRoute: typeof LabResultsRoute
   LinkRoute: typeof LinkRoute
@@ -403,11 +440,13 @@ export interface RootRouteChildren {
   LoginRoute: typeof LoginRoute
   MedicalProfileRoute: typeof MedicalProfileRoute
   MedicationsRoute: typeof MedicationsRoute
+  MessagesRoute: typeof MessagesRoute
   NearestErRoute: typeof NearestErRoute
   NotificationsRoute: typeof NotificationsRoute
   OnboardingRoute: typeof OnboardingRoute
   PlansRoute: typeof PlansRoute
   RegisterRoute: typeof RegisterRoute
+  SafeZonesRoute: typeof SafeZonesRoute
   SettingsRoute: typeof SettingsRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   AppointmentsNewRoute: typeof AppointmentsNewRoute
@@ -434,6 +473,13 @@ declare module '@tanstack/react-router' {
       path: '/settings'
       fullPath: '/settings'
       preLoaderRoute: typeof SettingsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/safe-zones': {
+      id: '/safe-zones'
+      path: '/safe-zones'
+      fullPath: '/safe-zones'
+      preLoaderRoute: typeof SafeZonesRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/register': {
@@ -469,6 +515,13 @@ declare module '@tanstack/react-router' {
       path: '/nearest-er'
       fullPath: '/nearest-er'
       preLoaderRoute: typeof NearestErRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/messages': {
+      id: '/messages'
+      path: '/messages'
+      fullPath: '/messages'
+      preLoaderRoute: typeof MessagesRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/medications': {
@@ -518,6 +571,13 @@ declare module '@tanstack/react-router' {
       path: '/history'
       fullPath: '/history'
       preLoaderRoute: typeof HistoryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/family': {
+      id: '/family'
+      path: '/family'
+      fullPath: '/family'
+      preLoaderRoute: typeof FamilyRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/emergency': {
@@ -644,6 +704,7 @@ const rootRouteChildren: RootRouteChildren = {
   ContactsRoute: ContactsRoute,
   DashboardRoute: DashboardRoute,
   EmergencyRoute: EmergencyRoute,
+  FamilyRoute: FamilyRoute,
   HistoryRoute: HistoryRoute,
   LabResultsRoute: LabResultsRoute,
   LinkRoute: LinkRoute,
@@ -651,11 +712,13 @@ const rootRouteChildren: RootRouteChildren = {
   LoginRoute: LoginRoute,
   MedicalProfileRoute: MedicalProfileRoute,
   MedicationsRoute: MedicationsRoute,
+  MessagesRoute: MessagesRoute,
   NearestErRoute: NearestErRoute,
   NotificationsRoute: NotificationsRoute,
   OnboardingRoute: OnboardingRoute,
   PlansRoute: PlansRoute,
   RegisterRoute: RegisterRoute,
+  SafeZonesRoute: SafeZonesRoute,
   SettingsRoute: SettingsRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   AppointmentsNewRoute: AppointmentsNewRoute,
