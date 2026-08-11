@@ -6,7 +6,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { toast } from "sonner";
 
-export const Route = createFileRoute("/appointments")({
+export const Route = createFileRoute("/appointments/")({
   head: () => ({
     meta: [
       { title: "Appointments — STRYDE" },

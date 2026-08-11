@@ -21,18 +21,24 @@ import { Route as MedicalProfileRouteImport } from './routes/medical-profile'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as LocationRouteImport } from './routes/location'
 import { Route as LinkRouteImport } from './routes/link'
+import { Route as LabResultsRouteImport } from './routes/lab-results'
 import { Route as HistoryRouteImport } from './routes/history'
 import { Route as EmergencyRouteImport } from './routes/emergency'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as ContactsRouteImport } from './routes/contacts'
+import { Route as CheckInsRouteImport } from './routes/check-ins'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AmbulanceRouteImport } from './routes/ambulance'
 import { Route as AlertsRouteImport } from './routes/alerts'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as VitalsIndexRouteImport } from './routes/vitals.index'
 import { Route as HospitalsIndexRouteImport } from './routes/hospitals.index'
 import { Route as FirstAidIndexRouteImport } from './routes/first-aid.index'
+import { Route as AppointmentsIndexRouteImport } from './routes/appointments.index'
+import { Route as VitalsLogRouteImport } from './routes/vitals.log'
 import { Route as HospitalsPlaceIdRouteImport } from './routes/hospitals.$placeId'
 import { Route as FirstAidTopicRouteImport } from './routes/first-aid.$topic'
+import { Route as AppointmentsNewRouteImport } from './routes/appointments.new'
 
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   id: '/sitemap.xml',
@@ -94,6 +100,11 @@ const LinkRoute = LinkRouteImport.update({
   path: '/link',
   getParentRoute: () => rootRouteImport,
 } as any)
+const LabResultsRoute = LabResultsRouteImport.update({
+  id: '/lab-results',
+  path: '/lab-results',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const HistoryRoute = HistoryRouteImport.update({
   id: '/history',
   path: '/history',
@@ -112,6 +123,11 @@ const DashboardRoute = DashboardRouteImport.update({
 const ContactsRoute = ContactsRouteImport.update({
   id: '/contacts',
   path: '/contacts',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CheckInsRoute = CheckInsRouteImport.update({
+  id: '/check-ins',
+  path: '/check-ins',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthRoute = AuthRouteImport.update({
@@ -134,6 +150,11 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const VitalsIndexRoute = VitalsIndexRouteImport.update({
+  id: '/vitals/',
+  path: '/vitals/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const HospitalsIndexRoute = HospitalsIndexRouteImport.update({
   id: '/hospitals/',
   path: '/hospitals/',
@@ -142,6 +163,16 @@ const HospitalsIndexRoute = HospitalsIndexRouteImport.update({
 const FirstAidIndexRoute = FirstAidIndexRouteImport.update({
   id: '/first-aid/',
   path: '/first-aid/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AppointmentsIndexRoute = AppointmentsIndexRouteImport.update({
+  id: '/appointments/',
+  path: '/appointments/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const VitalsLogRoute = VitalsLogRouteImport.update({
+  id: '/vitals/log',
+  path: '/vitals/log',
   getParentRoute: () => rootRouteImport,
 } as any)
 const HospitalsPlaceIdRoute = HospitalsPlaceIdRouteImport.update({
@@ -154,16 +185,23 @@ const FirstAidTopicRoute = FirstAidTopicRouteImport.update({
   path: '/first-aid/$topic',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AppointmentsNewRoute = AppointmentsNewRouteImport.update({
+  id: '/appointments/new',
+  path: '/appointments/new',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/alerts': typeof AlertsRoute
   '/ambulance': typeof AmbulanceRoute
   '/auth': typeof AuthRoute
+  '/check-ins': typeof CheckInsRoute
   '/contacts': typeof ContactsRoute
   '/dashboard': typeof DashboardRoute
   '/emergency': typeof EmergencyRoute
   '/history': typeof HistoryRoute
+  '/lab-results': typeof LabResultsRoute
   '/link': typeof LinkRoute
   '/location': typeof LocationRoute
   '/login': typeof LoginRoute
@@ -176,20 +214,26 @@ export interface FileRoutesByFullPath {
   '/register': typeof RegisterRoute
   '/settings': typeof SettingsRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/appointments/new': typeof AppointmentsNewRoute
   '/first-aid/$topic': typeof FirstAidTopicRoute
   '/hospitals/$placeId': typeof HospitalsPlaceIdRoute
+  '/vitals/log': typeof VitalsLogRoute
+  '/appointments/': typeof AppointmentsIndexRoute
   '/first-aid/': typeof FirstAidIndexRoute
   '/hospitals/': typeof HospitalsIndexRoute
+  '/vitals/': typeof VitalsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/alerts': typeof AlertsRoute
   '/ambulance': typeof AmbulanceRoute
   '/auth': typeof AuthRoute
+  '/check-ins': typeof CheckInsRoute
   '/contacts': typeof ContactsRoute
   '/dashboard': typeof DashboardRoute
   '/emergency': typeof EmergencyRoute
   '/history': typeof HistoryRoute
+  '/lab-results': typeof LabResultsRoute
   '/link': typeof LinkRoute
   '/location': typeof LocationRoute
   '/login': typeof LoginRoute
@@ -202,10 +246,14 @@ export interface FileRoutesByTo {
   '/register': typeof RegisterRoute
   '/settings': typeof SettingsRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/appointments/new': typeof AppointmentsNewRoute
   '/first-aid/$topic': typeof FirstAidTopicRoute
   '/hospitals/$placeId': typeof HospitalsPlaceIdRoute
+  '/vitals/log': typeof VitalsLogRoute
+  '/appointments': typeof AppointmentsIndexRoute
   '/first-aid': typeof FirstAidIndexRoute
   '/hospitals': typeof HospitalsIndexRoute
+  '/vitals': typeof VitalsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -213,10 +261,12 @@ export interface FileRoutesById {
   '/alerts': typeof AlertsRoute
   '/ambulance': typeof AmbulanceRoute
   '/auth': typeof AuthRoute
+  '/check-ins': typeof CheckInsRoute
   '/contacts': typeof ContactsRoute
   '/dashboard': typeof DashboardRoute
   '/emergency': typeof EmergencyRoute
   '/history': typeof HistoryRoute
+  '/lab-results': typeof LabResultsRoute
   '/link': typeof LinkRoute
   '/location': typeof LocationRoute
   '/login': typeof LoginRoute
@@ -229,10 +279,14 @@ export interface FileRoutesById {
   '/register': typeof RegisterRoute
   '/settings': typeof SettingsRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/appointments/new': typeof AppointmentsNewRoute
   '/first-aid/$topic': typeof FirstAidTopicRoute
   '/hospitals/$placeId': typeof HospitalsPlaceIdRoute
+  '/vitals/log': typeof VitalsLogRoute
+  '/appointments/': typeof AppointmentsIndexRoute
   '/first-aid/': typeof FirstAidIndexRoute
   '/hospitals/': typeof HospitalsIndexRoute
+  '/vitals/': typeof VitalsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -241,10 +295,12 @@ export interface FileRouteTypes {
     | '/alerts'
     | '/ambulance'
     | '/auth'
+    | '/check-ins'
     | '/contacts'
     | '/dashboard'
     | '/emergency'
     | '/history'
+    | '/lab-results'
     | '/link'
     | '/location'
     | '/login'
@@ -257,20 +313,26 @@ export interface FileRouteTypes {
     | '/register'
     | '/settings'
     | '/sitemap.xml'
+    | '/appointments/new'
     | '/first-aid/$topic'
     | '/hospitals/$placeId'
+    | '/vitals/log'
+    | '/appointments/'
     | '/first-aid/'
     | '/hospitals/'
+    | '/vitals/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/alerts'
     | '/ambulance'
     | '/auth'
+    | '/check-ins'
     | '/contacts'
     | '/dashboard'
     | '/emergency'
     | '/history'
+    | '/lab-results'
     | '/link'
     | '/location'
     | '/login'
@@ -283,20 +345,26 @@ export interface FileRouteTypes {
     | '/register'
     | '/settings'
     | '/sitemap.xml'
+    | '/appointments/new'
     | '/first-aid/$topic'
     | '/hospitals/$placeId'
+    | '/vitals/log'
+    | '/appointments'
     | '/first-aid'
     | '/hospitals'
+    | '/vitals'
   id:
     | '__root__'
     | '/'
     | '/alerts'
     | '/ambulance'
     | '/auth'
+    | '/check-ins'
     | '/contacts'
     | '/dashboard'
     | '/emergency'
     | '/history'
+    | '/lab-results'
     | '/link'
     | '/location'
     | '/login'
@@ -309,10 +377,14 @@ export interface FileRouteTypes {
     | '/register'
     | '/settings'
     | '/sitemap.xml'
+    | '/appointments/new'
     | '/first-aid/$topic'
     | '/hospitals/$placeId'
+    | '/vitals/log'
+    | '/appointments/'
     | '/first-aid/'
     | '/hospitals/'
+    | '/vitals/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -320,10 +392,12 @@ export interface RootRouteChildren {
   AlertsRoute: typeof AlertsRoute
   AmbulanceRoute: typeof AmbulanceRoute
   AuthRoute: typeof AuthRoute
+  CheckInsRoute: typeof CheckInsRoute
   ContactsRoute: typeof ContactsRoute
   DashboardRoute: typeof DashboardRoute
   EmergencyRoute: typeof EmergencyRoute
   HistoryRoute: typeof HistoryRoute
+  LabResultsRoute: typeof LabResultsRoute
   LinkRoute: typeof LinkRoute
   LocationRoute: typeof LocationRoute
   LoginRoute: typeof LoginRoute
@@ -336,10 +410,14 @@ export interface RootRouteChildren {
   RegisterRoute: typeof RegisterRoute
   SettingsRoute: typeof SettingsRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
+  AppointmentsNewRoute: typeof AppointmentsNewRoute
   FirstAidTopicRoute: typeof FirstAidTopicRoute
   HospitalsPlaceIdRoute: typeof HospitalsPlaceIdRoute
+  VitalsLogRoute: typeof VitalsLogRoute
+  AppointmentsIndexRoute: typeof AppointmentsIndexRoute
   FirstAidIndexRoute: typeof FirstAidIndexRoute
   HospitalsIndexRoute: typeof HospitalsIndexRoute
+  VitalsIndexRoute: typeof VitalsIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -428,6 +506,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LinkRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/lab-results': {
+      id: '/lab-results'
+      path: '/lab-results'
+      fullPath: '/lab-results'
+      preLoaderRoute: typeof LabResultsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/history': {
       id: '/history'
       path: '/history'
@@ -454,6 +539,13 @@ declare module '@tanstack/react-router' {
       path: '/contacts'
       fullPath: '/contacts'
       preLoaderRoute: typeof ContactsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/check-ins': {
+      id: '/check-ins'
+      path: '/check-ins'
+      fullPath: '/check-ins'
+      preLoaderRoute: typeof CheckInsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/auth': {
@@ -484,6 +576,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/vitals/': {
+      id: '/vitals/'
+      path: '/vitals'
+      fullPath: '/vitals/'
+      preLoaderRoute: typeof VitalsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/hospitals/': {
       id: '/hospitals/'
       path: '/hospitals'
@@ -496,6 +595,20 @@ declare module '@tanstack/react-router' {
       path: '/first-aid'
       fullPath: '/first-aid/'
       preLoaderRoute: typeof FirstAidIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/appointments/': {
+      id: '/appointments/'
+      path: '/appointments'
+      fullPath: '/appointments/'
+      preLoaderRoute: typeof AppointmentsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/vitals/log': {
+      id: '/vitals/log'
+      path: '/vitals/log'
+      fullPath: '/vitals/log'
+      preLoaderRoute: typeof VitalsLogRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/hospitals/$placeId': {
@@ -512,6 +625,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof FirstAidTopicRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/appointments/new': {
+      id: '/appointments/new'
+      path: '/appointments/new'
+      fullPath: '/appointments/new'
+      preLoaderRoute: typeof AppointmentsNewRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -520,10 +640,12 @@ const rootRouteChildren: RootRouteChildren = {
   AlertsRoute: AlertsRoute,
   AmbulanceRoute: AmbulanceRoute,
   AuthRoute: AuthRoute,
+  CheckInsRoute: CheckInsRoute,
   ContactsRoute: ContactsRoute,
   DashboardRoute: DashboardRoute,
   EmergencyRoute: EmergencyRoute,
   HistoryRoute: HistoryRoute,
+  LabResultsRoute: LabResultsRoute,
   LinkRoute: LinkRoute,
   LocationRoute: LocationRoute,
   LoginRoute: LoginRoute,
@@ -536,10 +658,14 @@ const rootRouteChildren: RootRouteChildren = {
   RegisterRoute: RegisterRoute,
   SettingsRoute: SettingsRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
+  AppointmentsNewRoute: AppointmentsNewRoute,
   FirstAidTopicRoute: FirstAidTopicRoute,
   HospitalsPlaceIdRoute: HospitalsPlaceIdRoute,
+  VitalsLogRoute: VitalsLogRoute,
+  AppointmentsIndexRoute: AppointmentsIndexRoute,
   FirstAidIndexRoute: FirstAidIndexRoute,
   HospitalsIndexRoute: HospitalsIndexRoute,
+  VitalsIndexRoute: VitalsIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

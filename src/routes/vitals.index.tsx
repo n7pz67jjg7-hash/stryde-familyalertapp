@@ -5,7 +5,7 @@ import { Screen, Card, Empty } from "@/components/Screen";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 
-export const Route = createFileRoute("/vitals")({
+export const Route = createFileRoute("/vitals/")({
   head: () => ({
     meta: [
       { title: "Vitals tracking — STRYDE" },
