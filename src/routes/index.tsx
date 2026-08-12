@@ -27,12 +27,13 @@ function Landing() {
       <section className="relative flex flex-1 flex-col items-center justify-center px-6 pt-16 pb-10 text-center">
         <div
           aria-hidden
-          className="absolute inset-0 opacity-25"
+          className="absolute inset-0 opacity-20"
           style={{
             background:
-              "radial-gradient(60% 50% at 50% 30%, oklch(0.74 0.18 50 / 0.35), transparent 70%)",
+              "radial-gradient(60% 50% at 50% 30%, oklch(0.45 0.13 262 / 0.18), transparent 70%)",
           }}
         />
+
         <div className="relative">
           <StrydeLogo size={108} />
         </div>
